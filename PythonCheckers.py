@@ -2,8 +2,18 @@ BLUE = '\033[94m'
 RED = '\033[91m'
 END = '\033[0m'
 import copy
+board =[["      ","   1   ", "     2    ","    3    ","    4    ","   5   ", "      6   ","    7    ","    8    "], 
+		 	["   1 ", "|       |", (RED + "|Counter|" + END),"|       |", (RED + "|Counter|" + END), "|       |", (RED + "|Counter|" + END),"|       |", RED + "|Counter|" + END], 
+		 	["   2 " , (RED + "|Counter|" + END), "|       |",(RED + "|Counter|" + END), "|       |", (RED + "|Counter|" + END), "|       |",(RED + "|Counter|" + END), "|       |"],
+		 	["   3 " , "|       |", (RED + "|Counter|" + END),"|       |", (RED + "|Counter|" + END), "|       |", (RED + "|Counter|" + END),"|       |", (RED + "|Counter|" + END)],
+		 	["   4 " , "|       |","|       |","|       |", "|       |","|       |","|       |", "|       |", "|       |"],
+		 	["   5 " , "|       |","|       |","|       |", (RED + "|Counter|" + END),"|       |","|       |", "|       |", "|       |"],
+		 	["   6 " , (BLUE + "|Counter|" + END), "|       |",BLUE + "|Counter|" + END, "|       |", BLUE + "|Counter|" + END, "|       |",BLUE + "|Counter|" + END, "|       |"],
+		 	["   7 " , "|       |", BLUE + "|Counter|" + END,"|       |", BLUE + "|Counter|" + END, "|       |", BLUE + "|Counter|" + END,"|       |", BLUE + "|Counter|" + END], 
+		 	["   8 ", BLUE + "|Counter|" + END, "|       |",BLUE + "|Counter|" + END, "|       |", BLUE + "|Counter|" + END, "|       |",BLUE + "|Counter|" + END, "|       |"]]
+
 counterstaken = 0
-def userturnlogic(counterstaken):
+def userturnlogic(counterstaken, board):
 	valid = 0
 	undoboard = copy.deepcopy(board)
 	while True:
@@ -12,6 +22,9 @@ def userturnlogic(counterstaken):
  		
  		if board[counter_to_move][counter_to_movey] == "|      |":
 			print"There is no counter in this position "
+			continue
+		elif board[counter_to_move][counter_to_movey] == RED + "|Counter|" + END or board[counter_to_moveto][counter_to_movetoy] == RED + "|Counter|" + END:
+			print"There is already a counter in this position"
 			continue
 		else:
 			break
@@ -51,6 +64,7 @@ def userturnlogic(counterstaken):
 	if undo_up == "Y":
 		print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       		for row in undoboard]))
+
 		redo = raw_input("Re-do? Y/N: ")
 		redo_up = redo.upper()
 		if redo_up == "Y":
@@ -99,15 +113,7 @@ while True:
 		continue
 	elif begin == "Y":
 
-		board =[["      ","   1   ", "     2    ","    3    ","    4    ","   5   ", "      6   ","    7    ","    8    "], 
-		 	["   1 ", "|       |", (RED + "|Counter|" + END),"|       |", (RED + "|Counter|" + END), "|       |", (RED + "|Counter|" + END),"|       |", RED + "|Counter|" + END], 
-		 	["   2 " , (RED + "|Counter|" + END), "|       |",(RED + "|Counter|" + END), "|       |", (RED + "|Counter|" + END), "|       |",(RED + "|Counter|" + END), "|       |"],
-		 	["   3 " , "|       |", (RED + "|Counter|" + END),"|       |", (RED + "|Counter|" + END), "|       |", (RED + "|Counter|" + END),"|       |", (RED + "|Counter|" + END)],
-		 	["   4 " , "|       |","|       |","|       |", "|       |","|       |","|       |", "|       |", "|       |"],
-		 	["   5 " , "|       |","|       |","|       |", (RED + "|Counter|" + END),"|       |","|       |", "|       |", "|       |"],
-		 	["   6 " , (BLUE + "|Counter|" + END), "|       |",BLUE + "|Counter|" + END, "|       |", BLUE + "|Counter|" + END, "|       |",BLUE + "|Counter|" + END, "|       |"],
-		 	["   7 " , "|       |", BLUE + "|Counter|" + END,"|       |", BLUE + "|Counter|" + END, "|       |", BLUE + "|Counter|" + END,"|       |", BLUE + "|Counter|" + END], 
-		 	["   8 ", BLUE + "|Counter|" + END, "|       |",BLUE + "|Counter|" + END, "|       |", BLUE + "|Counter|" + END, "|       |",BLUE + "|Counter|" + END, "|       |"]]
+		
 		print "counters taken =: " 
 		print counterstaken
 		print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
@@ -116,5 +122,5 @@ while True:
 		break	
 win = 0
 while win == 0:
-	userturnlogic(counterstaken)
+	userturnlogic(counterstaken, board)
 	AIturnlogic()
