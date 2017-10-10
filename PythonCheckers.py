@@ -23,8 +23,8 @@ def userturnlogic(counterstaken, board):
  		if board[counter_to_move][counter_to_movey] == "|      |":
 			print"There is no counter in this position "
 			continue
-		elif board[counter_to_move][counter_to_movey] == RED + "|Counter|" + END or board[counter_to_moveto][counter_to_movetoy] == RED + "|Counter|" + END:
-			print"There is already a counter in this position"
+		elif board[counter_to_move][counter_to_movey] == RED + "|Counter|" + END:
+			print"That is an AI counter"
 			continue
 		else:
 			break
@@ -55,10 +55,14 @@ def userturnlogic(counterstaken, board):
 		else:
 			valid_move = 1;
 	board[counter_to_moveto][counter_to_movetoy] = BLUE + "|Counter|" + END
-
+    
 	print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       	for row in board]))
 	print counterstaken
+	a = (counter_to_move,counter_to_movey) 
+	b = (counter_to_moveto,counter_to_movetoy)
+	c = (a[0] - b[0], a[1] - b[1])
+	print c 
 	undo = raw_input("Undo? Y/N: ")
 	undo_up = undo.upper()
 	if undo_up == "Y":
@@ -113,7 +117,6 @@ while True:
 		continue
 	elif begin == "Y":
 
-		
 		print "counters taken =: " 
 		print counterstaken
 		print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
