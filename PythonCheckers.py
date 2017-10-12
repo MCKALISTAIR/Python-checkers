@@ -37,7 +37,6 @@ def userturnlogic(counterstaken, board):
 		a = (counter_to_move,counter_to_movey) 
 		b = (counter_to_moveto,counter_to_movetoy)
 		displacement = (a[0] - b[0], a[1] - b[1])
-		print displacement 
 		if board[counter_to_moveto][counter_to_movetoy] == BLUE + "|Counter|" + END or board[counter_to_moveto][counter_to_movetoy] == RED + "|Counter|" + END:
 			print"There is already a counter in this position"
 		elif displacement == (2,-2):
@@ -45,11 +44,17 @@ def userturnlogic(counterstaken, board):
 				board[counter_to_moveto+1][counter_to_movetoy-1] = "|       |"
 				counterstaken = counterstaken + 1 
 				valid_move = 1;
+			elif board[counter_to_moveto+1][counter_to_movetoy+1] != RED + "|Counter|" + END:
+				print "Not a valid move"
+				continue
 		if displacement == (2,2):
 			if board[counter_to_moveto+1][counter_to_movetoy+1] == RED + "|Counter|" + END:
 				board[counter_to_moveto+1][counter_to_movetoy+1] = "|       |"
 				counterstaken = counterstaken + 1
 				valid_move = 1;	
+			elif board[counter_to_moveto+1][counter_to_movetoy+1] != RED + "|Counter|" + END:
+				print "Not a valid move"
+				continue
 		if board[counter_to_moveto+1][counter_to_movetoy-1] == RED + "|Counter|" + END:
 			if counter_to_moveto is counter_to_move - 2 or counter_to_movetoy is counter_to_movey - 2  :
 				print"Not a valid move"
@@ -64,7 +69,7 @@ def userturnlogic(counterstaken, board):
 	reversedisplacement = (displacement[0], displacement[1])
 	print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       	for row in board]))
-	print counterstaken
+	print "counters taken =: " ,counterstaken
 	
 	undo = raw_input("Undo? Y/N: ")
 	while True:
@@ -92,7 +97,8 @@ def userturnlogic(counterstaken, board):
 		else:
 			print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
      			for row in board]))
-	print"d"
+	if board[counter_to_moveto] == 1:
+		board[counter_to_moveto][counter_to_movetoy] = BLUE + "| King  |" + END
 def AIturnlogic():
 	print"AI TURN LOGIC GOES HERE"
 def youwin():
@@ -132,8 +138,7 @@ while True:
 		continue
 	elif begin in ['y', 'Y']:
 
-		print "counters taken =: " 
-		print counterstaken
+		print "counters taken =: " ,counterstaken
 		print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       	for row in board]))
 		
