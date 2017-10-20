@@ -12,17 +12,30 @@ board =[["      ","   1   ", "     2    ","    3    ","    4    ","   5   ", "  
 		 	["   7 " , "|       |", BLUE + "|Counter|" + END,"|       |", BLUE + "|Counter|" + END, "|       |", BLUE + "|Counter|" + END,"|       |", BLUE + "|Counter|" + END], 
 		 	["   8 ", BLUE + "|Counter|" + END, "|       |",BLUE + "|Counter|" + END, "|       |", BLUE + "|Counter|" + END, "|       |",BLUE + "|Counter|" + END, "|       |"]]
 
-counterstaken = 0
+
+def tutorial():
+	tutorialboard = [["      ","   1   ", "     2    ","    3    "],
+					["   1 ", "|       |", "|       |","|       |",],
+					["   2 " , "|       |", "|       |",(RED + "|Counter|" + END),],
+					["   3 " , "|       |", "|       |","|       |"]]
+	print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      	for row in tutorialboard]))
+	print"To select this counter you would enter 2 for the row number"
+	print"and 3 for the column number"
 def userturnlogic(counterstaken, board):
 	valid = 0
 	undoboard = copy.deepcopy(board)
 	while True:
-		try:
-			counter_to_move = int(input("Enter the row number of the counter you wish to move: "))
-			counter_to_movey = int(input("Enter the column number of the counter you wish to move: "))
-	 	except:
-	 		print("Please enter an integer value and not a string")
-	 		break
+		#try:
+		counter_to_move = int(input("Enter the row number of the counter you wish to move: "))
+		#except:
+	 		#print("Please enter an integer value and not a string")
+	 		#continue
+	 	#try:
+		counter_to_movey = int(input("Enter the column number of the counter you wish to move: "))
+	 	#except:
+	 		#print("Please enter an integer value and not a string")
+	 		#continue
  		if board[counter_to_move][counter_to_movey] == "|       |":
 			print"There is no counter in this position "
 			continue
@@ -43,11 +56,6 @@ def userturnlogic(counterstaken, board):
 		a = (counter_to_move,counter_to_movey) 
 		b = (counter_to_moveto,counter_to_movetoy)
 		displacement = (a[0] - b[0], a[1] - b[1])
-		if board[counter_to_move][counter_to_movey] == RED + "|  King |" + END:
-			if counter_to_moveto == counter_to_move + 1  or counter_to_moveto == counter_to_move - 1:
-				print "h" 
-		
-		
 		if board[counter_to_moveto][counter_to_movetoy] == BLUE + "|Counter|" + END or board[counter_to_moveto][counter_to_movetoy] == RED + "|Counter|" + END:
 			print"There is already a counter in this position"
 			continue
@@ -77,7 +85,10 @@ def userturnlogic(counterstaken, board):
 			continue
 		#elif counter_to_moveto is not counter_to_move - 1 or counter_to_movetoy is  counter_to_movey  :
 		#	print"Not a valid move"
-		if counter_to_moveto == "0 " or counter_to_moveto == "   1 " or counter_to_moveto == "   2 " or counter_to_moveto == "   3 " or counter_to_moveto == "   4 " or counter_to_moveto == "   5 " or counter_to_moveto == "   6 ":
+		if board[counter_to_moveto][counter_to_movetoy] == "      " or board[counter_to_moveto][counter_to_movetoy] == "   1   " or board[counter_to_moveto][counter_to_movetoy] == "     2    " or board[counter_to_moveto][counter_to_movetoy] == "    3    " or board[counter_to_moveto][counter_to_movetoy] == "    4    " or board[counter_to_moveto][counter_to_movetoy] == "   5   " or board[counter_to_moveto][counter_to_movetoy] == "      6   " or board[counter_to_moveto][counter_to_movetoy] == "    7    " or board[counter_to_moveto][counter_to_movetoy] == "    8    ":
+			print"Not a valid move" 
+			continue
+		if counter_to_move != counter_to_moveto +1: 
 			print"Not a valid move" 
 			continue
 		else:
@@ -169,7 +180,9 @@ def userturnlogic(counterstaken, board):
 				print "counters taken =: " ,counterstaken
 				break
 	#if counter_to_moveto == 1:
-
+def kinglogic():
+	board[counter_to_move][counter_to_movey] = "|       |"
+	board[counter_to_moveto][counter_to_movetoy] = BLUE + "|King   |" + END
 def AIturnlogic():
 	print"AI TURN LOGIC GOES HERE"
 def youwin():
@@ -199,23 +212,28 @@ print("40207511")
 print("Algorithms & Data Structures Coursework")
 print("Enter co-ordinates of counter in the form (vertical,horizontal)")
 undo_no = ""
+counterstaken = 0
 while True:
 	
-	begin = raw_input("Press Y to begin, N to quit: ")
+	begin = raw_input("Press P to begin, T for tutorial, N to quit: ")
 	if begin  ==  "N":
 		sys.exit()
-	elif begin  not in ['y', 'Y']:
-		print"Please enter Y or N only"
+	elif begin  not in ['p', 'P', 't', 'T']:
+		print"Please enter P, T, or N only"
 		continue
-	elif begin in ['y', 'Y']:
+	elif begin in ['t', 'T']:
+		tutorial()
+		continue
+	elif begin in ['p', 'P']:
 
-		print "counters taken =: " ,counterstaken
+		
 		print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       	for row in board]))
-		
+		print "counters taken =: " ,counterstaken
 		break	
 
-while counterstaken < 11:
+while counterstaken == 0:
 	userturnlogic(counterstaken, board)
 	AIturnlogic()
+	print counterstaken
 youwin()
