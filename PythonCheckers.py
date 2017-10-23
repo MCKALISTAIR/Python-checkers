@@ -27,15 +27,40 @@ def userturnlogic(counterstaken, board):
 	undoboard = copy.deepcopy(board)
 	while True:
 		#try:
-		counter_to_move = int(input("Enter the row number of the counter you wish to move: "))
+		while True:
+			counter_to_move_input = raw_input("Enter the row number of the counter you wish to move: ")
+			try:
+				number = int(counter_to_move_input)
+			except ValueError:
+				print "Error"
+				continue
+			else:
+				counter_to_move = int(counter_to_move_input)
+				break
+		#if counter_to_move_string not in ["1","2","3","4","5","6","7","8"]:
+			#print "Not a valid input"
+			#print counter_to_move_string
+			#continue
+		#else:
+			#print "8"
 		#except:
 	 		#print("Please enter an integer value and not a string")
 	 		#continue
 	 	#try:
-		counter_to_movey = int(input("Enter the column number of the counter you wish to move: "))
+	 	while True:
+			counter_to_movey_input = raw_input("Enter the column number of the counter you wish to move: ")
+			try:
+				numbery = int(counter_to_movey_input)
+			except ValueError:
+				print "Error"
+				continue
+			else:
+				counter_to_movey = int(counter_to_movey_input)
+				break
 	 	#except:
 	 		#print("Please enter an integer value and not a string")
 	 		#continue
+	 	
  		if board[counter_to_move][counter_to_movey] == "|       |":
 			print"There is no counter in this position "
 			continue
@@ -44,7 +69,8 @@ def userturnlogic(counterstaken, board):
 			continue
 		else:
 			break
-
+	print counter_to_move
+	print counter_to_movey
 	valid_move = 0;
 	while valid_move == 0:
 		#try:
@@ -63,6 +89,8 @@ def userturnlogic(counterstaken, board):
 				if board[counter_to_moveto+1][counter_to_movetoy-1] == RED + "|Counter|" + END:
 					board[counter_to_moveto+1][counter_to_movetoy-1] = "|       |"
 					board[counter_to_move][counter_to_movey] = "|       |"
+					board[counter_to_moveto][counter_to_movetoy] = BLUE + "|Counter|" + END
+					counterstaken = counterstaken + 1
 					valid_move = 1;
 				elif board[counter_to_moveto+1][counter_to_movetoy+1] != RED + "|Counter|" + END:
 					print "Not a valid move"
@@ -71,6 +99,7 @@ def userturnlogic(counterstaken, board):
 			if board[counter_to_moveto+1][counter_to_movetoy+1] == RED + "|Counter|" + END:
 				board[counter_to_moveto+1][counter_to_movetoy+1] = "|       |"
 				board[counter_to_move][counter_to_movey] = "|       |"
+				board[counter_to_moveto][counter_to_movetoy] = BLUE + "|Counter|" + END
 				counterstaken = counterstaken + 1
 				valid_move = 1;	
 			elif board[counter_to_moveto+1][counter_to_movetoy+1] != RED + "|Counter|" + END:
@@ -95,7 +124,7 @@ def userturnlogic(counterstaken, board):
 			valid_move = 1;
 			board[counter_to_move][counter_to_movey] = "|       |"
 			board[counter_to_moveto][counter_to_movetoy] = BLUE + "|Counter|" + END
-			counterstaken = counterstaken + 1
+			#counterstaken = counterstaken + 1
 	reversedisplacement = (displacement[0], displacement[1])
 	if counter_to_moveto == 1:
 		board[counter_to_moveto][counter_to_movetoy] = BLUE + "|  King |" + END
@@ -104,6 +133,7 @@ def userturnlogic(counterstaken, board):
 	print "counters taken =: " ,counterstaken
 	
 	print counter_to_moveto
+	print counter_to_movetoy
 	while True:
 		undo = raw_input("Undo? Y/N: ")
 		if undo in ['y', 'Y']:
