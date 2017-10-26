@@ -27,6 +27,10 @@ class Moves(Movelist):
 #create seperate instances of each counter
 #save start and end  pos
 #add to a list each move
+#board[counter_to_move][counter_to_movey] = startposition
+#board[counter_to_moveto][counter_to_movetoy] = endposition
+
+#movelist.append(startposition, endposition)
 
 board =[["      ","   1   ", "     2    ","    3    ","    4    ","   5   ", "      6   ","    7    ","    8    "], 
 		 	["   1 ", EmptySpace(), EmptySpace(),EmptySpace(), EnemyCounter(), EmptySpace(), EnemyCounter(),EmptySpace(), EnemyCounter()], 
