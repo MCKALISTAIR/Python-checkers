@@ -2,22 +2,49 @@ BLUE = '\033[94m'
 RED = '\033[91m'
 END = '\033[0m'
 import copy
+class FriendlyCounter:
+	def __repr__(self):
+    		return FriendlyCounter()
+    	def __str__(self):
+    		return BLUE + "|Counter|" + END
+class EnemyCounter:
+	def __repr__(self):
+    		return EnemyCounter()
+    	def __str__(self):
+    		return RED + "|Counter|" + END
+class EmptySpace:
+	def __repr__(self):
+    		return EmptySpace()
+    	def __str__(self):
+    		return "|       |"
+class Movelist:
+	def __init__(self):
+    		self.buttonlist = []
+class Moves(Movelist):
+	def __init__(self):
+        	Movelist.__init__(self)
+        	print self.buttonlist
+#create seperate instances of each counter
+#save start and end  pos
+#add to a list each move
+
 board =[["      ","   1   ", "     2    ","    3    ","    4    ","   5   ", "      6   ","    7    ","    8    "], 
-		 	["   1 ", "|       |", "|       |","|       |", (RED + "|Counter|" + END), "|       |", (RED + "|Counter|" + END),"|       |", RED + "|Counter|" + END], 
-		 	["   2 " , (BLUE + "|Counter|" + END), "|       |",(RED + "|Counter|" + END), "|       |", (RED + "|Counter|" + END), "|       |",(RED + "|Counter|" + END), "|       |"],
-		 	["   3 " , "|       |", "|       |","|       |", (RED + "|Counter|" + END), "|       |", (RED + "|Counter|" + END),"|       |", (RED + "|Counter|" + END)],
-		 	["   4 " , "|       |","|       |","|       |", "|       |","|       |","|       |", "|       |", "|       |"],
-		 	["   5 " , "|       |","|       |","|       |", (RED + "|Counter|" + END),"|       |","|       |", "|       |", "|       |"],
-		 	["   6 " , (BLUE + "|Counter|" + END), "|       |",BLUE + "|Counter|" + END, "|       |", BLUE + "|Counter|" + END, "|       |",BLUE + "|Counter|" + END, "|       |"],
-		 	["   7 " , "|       |", BLUE + "|Counter|" + END,"|       |", BLUE + "|Counter|" + END, "|       |", BLUE + "|Counter|" + END,"|       |", BLUE + "|Counter|" + END], 
-		 	["   8 ", BLUE + "|Counter|" + END, "|       |",BLUE + "|Counter|" + END, "|       |", BLUE + "|Counter|" + END, "|       |",BLUE + "|Counter|" + END, "|       |"]]
+		 	["   1 ", EmptySpace(), EmptySpace(),EmptySpace(), EnemyCounter(), EmptySpace(), EnemyCounter(),EmptySpace(), EnemyCounter()], 
+		 	["   2 " , FriendlyCounter(), EmptySpace(),EnemyCounter(), EmptySpace(), EnemyCounter(), EmptySpace(),EnemyCounter(), EmptySpace()],
+		 	["   3 " , EmptySpace(), EmptySpace(),EmptySpace(), EnemyCounter(), EmptySpace(), EnemyCounter(),EmptySpace(), EnemyCounter()],
+		 	["   4 " , EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
+		 	["   5 " , EmptySpace(),EmptySpace(),EmptySpace(), EnemyCounter(),EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
+		 	["   6 " , FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace(), FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace()],
+		 	["   7 " , EmptySpace(), FriendlyCounter(),EmptySpace(), FriendlyCounter(), EmptySpace(), FriendlyCounter(),EmptySpace(), FriendlyCounter()], 
+		 	["   8 ", FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace(), FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace()]]
+
 
 
 def tutorial():
 	tutorialboard = [["      ","   1   ", "     2    ","    3    "],
-					["   1 ", "|       |", "|       |","|       |",],
-					["   2 " , "|       |", "|       |",(RED + "|Counter|" + END),],
-					["   3 " , "|       |", "|       |","|       |"]]
+					["   1 ", EmptySpace(), EmptySpace(),EmptySpace(),],
+					["   2 " , EmptySpace(), EmptySpace(),EnemyCounter(),],
+					["   3 " , EmptySpace(), EmptySpace(),EmptySpace()]]
 	print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       	for row in tutorialboard]))
 	print"To select this counter you would enter 2 for the row number"
@@ -57,10 +84,10 @@ def userturnlogic(counterstaken, board):
 	 		#print("Please enter an integer value and not a string")
 	 		#continue
 
- 		if board[counter_to_move][counter_to_movey] == "|       |":
+ 		if board[counter_to_move][counter_to_movey] == EmptySpace():
 			print"There is no counter in this position "
 			continue
-		elif board[counter_to_move][counter_to_movey] == RED + "|Counter|" + END:
+		elif board[counter_to_move][counter_to_movey] == EnemyCounter():
 			print"That is an AI counter"
 			continue
 		else:
@@ -106,30 +133,31 @@ def userturnlogic(counterstaken, board):
 		#if board[counter_to_move][counter_to_movey] == (BLUE + "|King   |" + END):
 	 		#kinglogic()
 	 		#valid_move = 1
-		if board[counter_to_moveto][counter_to_movetoy] == BLUE + "|Counter|" + END or board[counter_to_moveto][counter_to_movetoy] == RED + "|Counter|" + END:
+		if board[counter_to_moveto][counter_to_movetoy] == FriendlyCounter() or board[counter_to_moveto][counter_to_movetoy] == RED + "|Counter|" + END:
 			print"There is already a counter in this position"
 			continue
 		elif displacement == (2,-2):
-				if board[counter_to_moveto+1][counter_to_movetoy-1] == RED + "|Counter|" + END:
-					board[counter_to_moveto+1][counter_to_movetoy-1] = "|       |"
-					board[counter_to_move][counter_to_movey] = "|       |"
-					board[counter_to_moveto][counter_to_movetoy] = BLUE + "|Counter|" + END
+				if board[counter_to_moveto+1][counter_to_movetoy-1] == EnemyCounter():
+					board[counter_to_moveto+1][counter_to_movetoy-1] = EmptySpace()
+					board[counter_to_move][counter_to_movey] = EmptySpace()
+					board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
 					counterstaken = counterstaken + 1
 					valid_move = 1;
-				elif board[counter_to_moveto+1][counter_to_movetoy+1] != RED + "|Counter|" + END:
+				elif board[counter_to_moveto+1][counter_to_movetoy-1] != EnemyCounter():
 					print "Not a valid move-"
+					print board[counter_to_moveto+1][counter_to_movetoy-1]
 					continue
 		if displacement == (2,2):
-			if board[counter_to_moveto+1][counter_to_movetoy+1] == RED + "|Counter|" + END:
-				board[counter_to_moveto+1][counter_to_movetoy+1] = "|       |"
-				board[counter_to_move][counter_to_movey] = "|       |"
-				board[counter_to_moveto][counter_to_movetoy] = BLUE + "|Counter|" + END
+			if board[counter_to_moveto+1][counter_to_movetoy+1] == EnemyCounter():
+				board[counter_to_moveto+1][counter_to_movetoy+1] = EmptySpace()
+				board[counter_to_move][counter_to_movey] = EmptySpace()
+				board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
 				counterstaken = counterstaken + 1
 				valid_move = 1;	
-			elif board[counter_to_moveto+1][counter_to_movetoy+1] != RED + "|Counter|" + END:
+			elif board[counter_to_moveto+1][counter_to_movetoy+1] != EnemyCounter():
 				print "Not a valid move--"
 				continue
-		if board[counter_to_moveto+1][counter_to_movetoy-1] == RED + "|Counter|" + END:
+		if board[counter_to_moveto+1][counter_to_movetoy-1] == EnemyCounter():
 			if counter_to_moveto is counter_to_move - 2 or counter_to_movetoy is counter_to_movey - 2  :
 				print"Not a valid move---"
 				continue
@@ -146,40 +174,42 @@ def userturnlogic(counterstaken, board):
 			continue
 		else:
 			valid_move = 1;
-			board[counter_to_move][counter_to_movey] = "|       |"
-			board[counter_to_moveto][counter_to_movetoy] = BLUE + "|Counter|" + END
+			board[counter_to_move][counter_to_movey] = EmptySpace()
+			board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
 			#counterstaken = counterstaken + 1
 	reversedisplacement = (displacement[0], displacement[1])
 	if counter_to_moveto == 1:
 		board[counter_to_moveto][counter_to_movetoy] = BLUE + "|King   |" + END
-	
+
 	print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       	for row in board]))
 	print "counters taken =: " ,counterstaken
+
+
 	while True:
 		undo = raw_input("Undo? Y/N: ")
 		if undo in ['y', 'Y']:
 			undo_no = "no"
 			if displacement == (2, -2):
-				board[counter_to_move][counter_to_movey] = BLUE + "|Counter|" + END
-				board[counter_to_moveto][counter_to_movetoy] = "|       |"
-				board[counter_to_moveto+1][counter_to_movetoy-1] = RED + "|Counter|" + END
+				board[counter_to_move][counter_to_movey] = FriendlyCounter()
+				board[counter_to_moveto][counter_to_movetoy] = EmptySpace()
+				board[counter_to_moveto+1][counter_to_movetoy-1] = EnemyCounter()
 				counterstaken = counterstaken - 1 
 				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       				for row in board]))
 				print "counters taken =: " ,counterstaken
 				break
 			elif displacement == (2, 2):
-				board[counter_to_moveto][counter_to_movetoy] = "|       |"
-			    	board[counter_to_move][counter_to_movey] = BLUE + "|Counter|" + END
-			    	board[counter_to_moveto + 1][counter_to_movetoy +1 ] = RED + "|Counter|" + END
+				board[counter_to_moveto][counter_to_movetoy] = EmptySpace()
+			    	board[counter_to_move][counter_to_movey] = FriendlyCounter()
+			    	board[counter_to_moveto + 1][counter_to_movetoy +1 ] = EnemyCounter()
 				counterstaken = counterstaken - 1
 				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       				for row in board]))
 				print "counters taken =: " ,counterstaken
 				break
 			else:
-				board[counter_to_move][counter_to_movey] = BLUE + "|Counter|" + END
+				board[counter_to_move][counter_to_movey] = FriendlyCounter()
 				board[counter_to_moveto][counter_to_movetoy] = "|       |"
 				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       				for row in board]))
@@ -198,9 +228,9 @@ def userturnlogic(counterstaken, board):
 			redo_up = redo.upper()
 			if redo_up in ['y', 'Y']:
 				if displacement == (2, -2):
-					board[counter_to_moveto][counter_to_movetoy] = BLUE + "|Counter|" + END
-				    	board[counter_to_move][counter_to_movey] = "|       |"
-				    	board[counter_to_moveto + 1][counter_to_movetoy -1] = "|       |"
+					board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
+				    	board[counter_to_move][counter_to_movey] = EmptySpace()
+				    	board[counter_to_moveto + 1][counter_to_movetoy -1] = EmptySpace()
 					counterstaken = counterstaken + 1
 					print "jgf"
 					print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
@@ -208,17 +238,17 @@ def userturnlogic(counterstaken, board):
 					print "counters taken =: " ,counterstaken
 					break
 				elif displacement == (2, 2):
-					board[counter_to_moveto][counter_to_movetoy] = BLUE + "|Counter|" + END
-				    	board[counter_to_move][counter_to_movey] = "|       |"
-				    	board[counter_to_moveto + 1][counter_to_movetoy +1] = "|       |"
+					board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
+				    	board[counter_to_move][counter_to_movey] = EmptySpace()
+				    	board[counter_to_moveto + 1][counter_to_movetoy +1] = EmptySpace()
 					counterstaken = counterstaken + 1
 					print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
 	      				for row in board]))
 					print "counters taken =: " ,counterstaken
 					break
 				else:
-					board[counter_to_move][counter_to_movey] = "|       |"
-					board[counter_to_moveto][counter_to_movetoy] = BLUE + "|Counter|" + END
+					board[counter_to_move][counter_to_movey] = EmptySpace()
+					board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
 					print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
 	      				for row in board]))
 					print "counters taken =: " ,counterstaken
@@ -234,12 +264,12 @@ def userturnlogic(counterstaken, board):
 	
 	#if counter_to_moveto == 1:
 def kinglogic(counter_to_move, counter_to_movey, counter_to_moveto, counter_to_movetoy):
-	board[counter_to_move][counter_to_movey] = "|       |"
+	board[counter_to_move][counter_to_movey] = EmptySpace()
 	board[counter_to_moveto][counter_to_movetoy] = BLUE + "|King   |" + END
 	print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
 	     			for row in board]))
 def AIturnlogic(board):
-	#board.index((RED + "|Counter|" + END))
+	board.index(EmptySpace())
 	indices = [i for i, x in enumerate(board) if x == "    4    "]
 	#print board[1][4]
 	#print "k"
@@ -250,6 +280,8 @@ def AIturnlogic(board):
 		#for data in record:
     			#if data == (RED + "|Counter|" + END):
         			#print data
+    	#for rowNo in enumerate(board):
+    		#print(rowNo)
 def youwin():
 	text = [["|  | |  ||       ||  | |  |  | | _ | ||   | |  |  | ||  |"], 
 			["|  |_|  ||   _   ||  | |  |  | || || ||   | |   |_| ||  |"], 
@@ -271,7 +303,7 @@ def youloose():
   	
   	print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
     	for row in textl]))
-  	
+ 	
 print("Alistair Mckay")
 print("40207511")
 print("Algorithms & Data Structures Coursework")
