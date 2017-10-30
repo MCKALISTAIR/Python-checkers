@@ -22,13 +22,11 @@ class EmptySpace:
     		return EmptySpace()
     	def __str__(self):
     		return "|       |"
-class Movelist(object):
-	def __init__(self):
-    		self.buttonlist = []
-class Moves(Movelist):
-	def __init__(self):
-        	Movelist.__init__(self)
-        	print self.buttonlist
+#class Moves:
+	    #def __init__(self, startpos, endpos):
+        	#self.startpos = startpos
+       	    #self.endpos = endpos
+
 #create seperate instances of each counter
 #save start and end  pos
 #add to a list each move
@@ -37,7 +35,7 @@ class Moves(Movelist):
 
 #movelist.append(startposition, endposition)
 Enemy = EnemyCounter()
-
+movelist = []
 def checkerboard(n):
     board = []
     for i in range(n):
@@ -53,7 +51,7 @@ board =[["      ","   1   ", "     2    ","    3    ","    4    ","   5   ", "  
 		 	["   1 ", EmptySpace(), EmptySpace(),EmptySpace(),Enemy , EmptySpace(), Enemy,EmptySpace(), EnemyCounter()], 
 		 	["   2 " , FriendlyCounter(), EmptySpace(),Enemy, EmptySpace(), EnemyCounter(), EmptySpace(),Enemy, EmptySpace()],
 		 	["   3 " , EmptySpace(), EmptySpace(),EmptySpace(), Enemy, EmptySpace(), EnemyCounter(),EmptySpace(), EnemyCounter()],
-		 	["   4 " , EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
+		 	["   4 " , EmptySpace(),EmptySpace(),FriendlyCounter(), EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
 		 	["   5 " , EmptySpace(),Enemy,EmptySpace(), Enemy,EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
 		 	["   6 " , FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace(), FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace()],
 		 	["   7 " , EmptySpace(), FriendlyCounter(),EmptySpace(), FriendlyCounter(), EmptySpace(), FriendlyCounter(),EmptySpace(), FriendlyCounter()], 
@@ -71,6 +69,7 @@ def tutorial():
 	print"To select this counter you would enter 2 for the row number"
 	print"and 3 for the column number"
 def userturnlogic(counterstaken, board):
+	print "Player 1's turn"
 	valid = 0
 	undoboard = copy.deepcopy(board)
 	while True:
@@ -108,8 +107,8 @@ def userturnlogic(counterstaken, board):
  		if board[counter_to_move][counter_to_movey] == EmptySpace():
 			print"There is no counter in this position "
 			continue
-		elif board[counter_to_move][counter_to_movey] == EnemyCounter():
-			print"That is an AI counter"
+		if board[counter_to_move][counter_to_movey] == Enemy:
+			print"That is an enemy counter"
 			continue
 		else:
 			break
@@ -145,25 +144,31 @@ def userturnlogic(counterstaken, board):
 		#except:
 			#print("Please enter an integer value and not a string")
 			#throw
-		board[counter_to_move][counter_to_movey]
 		#kinglogic(counter_to_move, counter_to_movey, counter_to_moveto, counter_to_movetoy)
-		print board[counter_to_move][counter_to_movey]
+		
 		a = (counter_to_move,counter_to_movey) 
 		b = (counter_to_moveto,counter_to_movetoy)
 		displacement = (a[0] - b[0], a[1] - b[1])
 		#if board[counter_to_move][counter_to_movey] == (BLUE + "|King   |" + END):
 	 		#kinglogic()
 	 		#valid_move = 1
-		if board[counter_to_moveto][counter_to_movetoy] == FriendlyCounter() or board[counter_to_moveto][counter_to_movetoy] == RED + "|Counter|" + END:
-			print"There is already a counter in this position"
-			continue
-		elif displacement == (2,-2):
-				if board[counter_to_moveto+1][counter_to_movetoy-1] == E1:
+	 	print displacement
+	 	if board[counter_to_move-1][counter_to_movey+1] == Enemy or board[counter_to_move-1][counter_to_movey-1] == Enemy:
+			if board[counter_to_move-2][counter_to_movey+2] != FriendlyCounter() or board[counter_to_move-2][counter_to_movey-2] != FriendlyCounter():
+				if displacement not in [(2,2), (2,-2)]: 
+					print "Not a valid move, you must take the available enemy counter"
+					continue 
+		if displacement == (2,-2):
+				if board[counter_to_moveto+1][counter_to_movetoy-1] == EnemyCounter():
 					board[counter_to_moveto+1][counter_to_movetoy-1] = EmptySpace()
 					board[counter_to_move][counter_to_movey] = EmptySpace()
 					board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
 					counterstaken = counterstaken + 1
 					valid_move = 1;
+					print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      				for row in board]))
+					print "counters taken =: " ,counterstaken
+					secondturn(board, counter_to_move, counter_to_moveto, counter_to_movey, counter_to_movetoy, counterstaken)
 				elif board[counter_to_moveto+1][counter_to_movetoy-1] != EnemyCounter():
 					print "Not a valid move-"
 					print board[counter_to_moveto+1][counter_to_movetoy-1]
@@ -175,6 +180,10 @@ def userturnlogic(counterstaken, board):
 				board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
 				counterstaken = counterstaken + 1
 				valid_move = 1;	
+				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      			for row in board]))
+				print "counters taken =: " ,counterstaken
+				secondturn(board, counter_to_move, counter_to_moveto, counter_to_movey, counter_to_movetoy, counterstaken)
 			elif board[counter_to_moveto+1][counter_to_movetoy+1] != EnemyCounter():
 				print "Not a valid move--"
 				continue
@@ -184,6 +193,10 @@ def userturnlogic(counterstaken, board):
 				continue
 		if counter_to_moveto == counter_to_move - 1 and counter_to_movetoy == counter_to_movey:
 			print "Not a valid move----"
+			continue
+		print board[counter_to_moveto][counter_to_movetoy]
+		if board[counter_to_moveto][counter_to_movetoy] == FriendlyCounter() or board[counter_to_moveto][counter_to_movetoy] == Enemy:
+			print"There is already a counter in this position"
 			continue
 		#elif counter_to_moveto is not counter_to_move - 1 or counter_to_movetoy is  counter_to_movey  :
 		#	print"Not a valid move"
@@ -281,32 +294,32 @@ def userturnlogic(counterstaken, board):
 	     			for row in board]))
 				print "counters taken =: " ,counterstaken
 				break
-def player2turnlogic(board, counterstaken):
-	print "Player 2's turn "
+def player2turnlogic(board, player2counterstaken):
+	print RED + "Player 2's turn " + END
 	valid = 0
 	while True:
 		while True:
-			counter_to_move_input = raw_input("Enter the row number of the counter you wish to move: ")
+			counter_to_move_input = raw_input(RED + "Enter the row number of the counter you wish to move: "+ END)
 			try:
 				number = int(counter_to_move_input)
 			except ValueError:
-				print "Please enter a row number"
+				print RED + "Please enter a row number" + END
 				continue
 			except SyntaxError:
-				print "Please enter a row number"
+				print RED + "Please enter a row number" + END
 				continue
 			else:
 				counter_to_move = int(counter_to_move_input)
 				break
 	 	while True:
-			counter_to_movey_input = raw_input("Enter the column number of the counter you wish to move: ")
+			counter_to_movey_input = raw_input(RED + "Enter the column number of the counter you wish to move: " + END)
 			try:
 				numbery = int(counter_to_movey_input)
 			except ValueError:
-				print "Please enter a column number"
+				print RED + "Please enter a column number" + END
 				continue
 			except SyntaxError:
-				print "Please enter a column number"
+				print RED + "Please enter a column number" + END
 				continue
 			else:
 				counter_to_movey = int(counter_to_movey_input)
@@ -316,10 +329,10 @@ def player2turnlogic(board, counterstaken):
 	 		#continue
 
  		if board[counter_to_move][counter_to_movey] == EmptySpace():
-			print"There is no counter in this position "
+			print RED + "There is no counter in this position " + END
 			continue
 		if board[counter_to_move][counter_to_movey] == FriendlyCounter():
-			print"That is an AI counter"
+			print RED + "That is an enemy counter" + END
 			continue
 		else:
 			break
@@ -355,7 +368,6 @@ def player2turnlogic(board, counterstaken):
 		#except:
 			#print("Please enter an integer value and not a string")
 			#throw
-		board[counter_to_move][counter_to_movey]
 		#kinglogic(counter_to_move, counter_to_movey, counter_to_moveto, counter_to_movetoy)
 		print board[counter_to_move][counter_to_movey]
 		a = (counter_to_move,counter_to_movey) 
@@ -363,36 +375,41 @@ def player2turnlogic(board, counterstaken):
 		displacement = (a[0] - b[0], a[1] - b[1])
 		#if board[counter_to_move][counter_to_movey] == (BLUE + "|King   |" + END):
 	 		#kinglogic()
-	 		#valid_move = 1
+	 		#valid_move = 11	1,4 - 3,2 -2,2   1,4 3,6 -2-2
+	 	print board[counter_to_move+1][counter_to_movey+1]
+	 	if board[counter_to_move+1][counter_to_movey+1] == FriendlyCounter() or board[counter_to_move+1][counter_to_movey-1] == FriendlyCounter():
+			if displacement not in [(-2,2), (-2,-2)]: 
+				print "Not a valid move, you must take the available enemy counter"
+				continue 
 		if board[counter_to_moveto][counter_to_movetoy] == EnemyCounter() or board[counter_to_moveto][counter_to_movetoy] == RED + "|Counter|" + END:
 			print"There is already a counter in this position"
 			continue
 		elif displacement == (2,-2):
-				if board[counter_to_moveto+1][counter_to_movetoy-1] == E1:
-					board[counter_to_moveto+1][counter_to_movetoy-1] = EmptySpace()
+				if board[counter_to_moveto-1][counter_to_movetoy-1] == FriendlyCounter():
+					board[counter_to_moveto-1][counter_to_movetoy-1] = EmptySpace()
 					board[counter_to_move][counter_to_movey] = EmptySpace()
 					board[counter_to_moveto][counter_to_movetoy] = EnemyCounter()
 					counterstaken = counterstaken + 1
 					valid_move = 1;
-				elif board[counter_to_moveto+1][counter_to_movetoy-1] != FriendlyCounter():
+				elif board[counter_to_moveto-1][counter_to_movetoy-1] != FriendlyCounter():
 					print "Not a valid move-"
-					print board[counter_to_moveto+1][counter_to_movetoy-1]
+					print board[counter_to_moveto-1][counter_to_movetoy-1]
 					continue
 		if displacement == (2,2):
-			if type(board[counter_to_moveto+1][counter_to_movetoy+1]) == type(FriendlyCounter()):
-				board[counter_to_moveto+1][counter_to_movetoy+1] = EmptySpace()
+			if type(board[counter_to_moveto-1][counter_to_movetoy+1]) == type(FriendlyCounter()):
+				board[counter_to_moveto-1][counter_to_movetoy+1] = EmptySpace()
 				board[counter_to_move][counter_to_movey] = EmptySpace()
 				board[counter_to_moveto][counter_to_movetoy] = EnemyCounter()
-				counterstaken = counterstaken + 1
+				player2counterstaken = player2counterstaken + 1
 				valid_move = 1;	
-			elif board[counter_to_moveto+1][counter_to_movetoy+1] != FriendlyCounter():
+			elif board[counter_to_moveto-1][counter_to_movetoy+1] != FriendlyCounter():
 				print "Not a valid move--"
 				continue
-		if board[counter_to_moveto+1][counter_to_movetoy-1] == FriendlyCounter():
+		if board[counter_to_moveto-1][counter_to_movetoy-1] == FriendlyCounter():
 			if counter_to_moveto is counter_to_move - 2 or counter_to_movetoy is counter_to_movey - 2  :
 				print"Not a valid move---"
 				continue
-		if counter_to_moveto == counter_to_move - 1 and counter_to_movetoy == counter_to_movey:
+		if counter_to_moveto == counter_to_move + 1 and counter_to_movetoy == counter_to_movey:
 			print "Not a valid move----"
 			continue
 		#elif counter_to_moveto is not counter_to_move - 1 or counter_to_movetoy is  counter_to_movey  :
@@ -400,7 +417,7 @@ def player2turnlogic(board, counterstaken):
 		if board[counter_to_moveto][counter_to_movetoy] == "      " or board[counter_to_moveto][counter_to_movetoy] == "   1   " or board[counter_to_moveto][counter_to_movetoy] == "     2    " or board[counter_to_moveto][counter_to_movetoy] == "    3    " or board[counter_to_moveto][counter_to_movetoy] == "    4    " or board[counter_to_moveto][counter_to_movetoy] == "   5   " or board[counter_to_moveto][counter_to_movetoy] == "      6   " or board[counter_to_moveto][counter_to_movetoy] == "    7    " or board[counter_to_moveto][counter_to_movetoy] == "    8    ":
 			print"Not a valid move-----" 
 			continue
-		if counter_to_move != counter_to_moveto +1: 
+		if counter_to_move != counter_to_moveto -1: 
 			print"Not a valid move------" 
 			continue
 		else:
@@ -414,7 +431,7 @@ def player2turnlogic(board, counterstaken):
 
 	print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       	for row in board]))
-	print "counters taken =: " ,counterstaken
+	print RED + "counters taken =: " + END , player2counterstaken
 
 	while True:
 		undo = raw_input("Undo? Y/N: ")
@@ -424,6 +441,189 @@ def player2turnlogic(board, counterstaken):
 				board[counter_to_move][counter_to_movey] = EnemyCounter()
 				board[counter_to_moveto][counter_to_movetoy] = EmptySpace()
 				board[counter_to_moveto+1][counter_to_movetoy-1] = FriendlyCounter()
+				player2counterstaken = player2counterstaken - 1 
+				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      				for row in board]))
+				print RED + "counters taken =: " + END ,player2counterstaken
+				break
+			elif displacement == (2, 2):
+				board[counter_to_moveto][counter_to_movetoy] = EmptySpace()
+			    	board[counter_to_move][counter_to_movey] = EnemyCounter()
+			    	board[counter_to_moveto + 1][counter_to_movetoy +1 ] = FriendlyCounter()
+				player2counterstaken = player2counterstaken - 1
+				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      				for row in board]))
+				print RED + "counters taken =: " + END ,player2counterstaken
+				break
+			else:
+				board[counter_to_move][counter_to_movey] = EnemyCounter()
+				board[counter_to_moveto][counter_to_movetoy] = "|       |"
+				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      				for row in board]))
+				print RED + "counters taken =: " + END ,player2counterstaken
+				break
+		elif undo not  in ['y', 'Y', 'n', 'N']:
+			print "Please enter Y or N only"
+			continue
+		else:
+			undo_no = "yes"
+			break
+	print displacement
+	if undo_no is not "yes":
+		while True:		
+			redo = raw_input("Re-do? Y/N: ")
+			redo_up = redo.upper()
+			if redo_up in ['y', 'Y']:
+				if displacement == (2, -2):
+					board[counter_to_moveto][counter_to_movetoy] = EnemyCounter()
+				    	board[counter_to_move][counter_to_movey] = EmptySpace()
+				    	board[counter_to_moveto + 1][counter_to_movetoy -1] = EmptySpace()
+					player2counterstaken = player2counterstaken + 1
+					print "jgf"
+					print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+	      				for row in board]))
+					print RED + "counters taken =: " + END ,player2counterstaken
+					break
+				elif displacement == (2, 2):
+					board[counter_to_moveto][counter_to_movetoy] = EnemyCounter()
+				    	board[counter_to_move][counter_to_movey] = EmptySpace()
+				    	board[counter_to_moveto + 1][counter_to_movetoy +1] = EmptySpace()
+					player2counterstaken = player2counterstaken + 1
+					print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+	      				for row in board]))
+					print RED + "counters taken =: " + END ,player2counterstaken
+					break
+				else:
+					board[counter_to_move][counter_to_movey] = EmptySpace()
+					board[counter_to_moveto][counter_to_movetoy] = EnemyCounter()
+					print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+	      				for row in board]))
+					print RED + "counters taken =: " + END ,player2counterstaken
+					break
+			elif redo_up not  in ['y', 'Y', 'n', 'N']:
+				print "Please enter Y or N only"
+				continue
+			else:
+				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+	     			for row in board]))
+				print RED + "counters taken =: " + END ,player2counterstaken
+				break	
+def secondturn(board, counter_to_move, counter_to_moveto, counter_to_movey, counter_to_movetoy, counterstaken):
+	print "second turn"
+	print counter_to_moveto
+	print counter_to_movetoy
+	counter_to_move = counter_to_moveto
+	counter_to_movey = counter_to_movetoy
+	valid_move = 0;
+	while valid_move == 0:
+		#try:
+		while True:
+			counter_to_move_to_input = raw_input("Enter the row number of the counter you wish to move to: ")
+			try:
+				number2 = int(counter_to_move_to_input)
+			except ValueError:
+				print "Error"
+				continue
+			except SyntaxError:
+				print "Please enter a column number"
+				continue
+			else:
+				counter_to_moveto = int(counter_to_move_to_input)
+				break
+		while True:
+			counter_to_move_toy_input = raw_input("Enter the column number of the counter you wish to move to: ")
+			try:
+				number3 = int(counter_to_move_toy_input)
+			except ValueError:
+				print "Error"
+				continue
+			except SyntaxError:
+				print "Please enter a column number"
+				continue
+			else:
+				counter_to_movetoy = int(counter_to_move_toy_input)
+				break
+		a = (counter_to_move,counter_to_movey) 
+		b = (counter_to_moveto,counter_to_movetoy)
+		displacement = (a[0] - b[0], a[1] - b[1])
+		#if board[counter_to_move][counter_to_movey] == (BLUE + "|King   |" + END):
+	 		#kinglogic()
+	 		#valid_move = 1
+	 	print displacement
+	 	if board[counter_to_move-1][counter_to_movey+1] == Enemy or board[counter_to_move-1][counter_to_movey-1] == Enemy:
+			if board[counter_to_move-2][counter_to_movey+2] != FriendlyCounter() or board[counter_to_move-2][counter_to_movey-2] != FriendlyCounter():
+				if displacement not in [(2,2), (2,-2)]: 
+					print "Not a valid move, you must take the available enemy counter"
+					continue 
+		if displacement == (2,-2):
+				if board[counter_to_moveto+1][counter_to_movetoy-1] == EnemyCounter():
+					board[counter_to_moveto+1][counter_to_movetoy-1] = EmptySpace()
+					board[counter_to_move][counter_to_movey] = EmptySpace()
+					board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
+					counterstaken = counterstaken + 1
+					valid_move = 1;
+					print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      				for row in board]))
+					print "counters taken =: " ,counterstaken
+					secondturn(board, counter_to_move, counter_to_moveto, counter_to_movey, counter_to_movetoy)
+				elif board[counter_to_moveto+1][counter_to_movetoy-1] != EnemyCounter():
+					print "Not a valid move-"
+					print board[counter_to_moveto+1][counter_to_movetoy-1]
+					continue
+		if displacement == (2,2):
+			if type(board[counter_to_moveto+1][counter_to_movetoy+1]) == type(EnemyCounter()):
+				board[counter_to_moveto+1][counter_to_movetoy+1] = EmptySpace()
+				board[counter_to_move][counter_to_movey] = EmptySpace()
+				board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
+				counterstaken = counterstaken + 1
+				valid_move = 1;	
+				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      			for row in board]))
+				print "counters taken =: " ,counterstaken
+				secondturn(board, counter_to_move, counter_to_moveto, counter_to_movey, counter_to_movetoy)
+			elif board[counter_to_moveto+1][counter_to_movetoy+1] != EnemyCounter():
+				print "Not a valid move--"
+				continue
+		if board[counter_to_moveto+1][counter_to_movetoy-1] == EnemyCounter():
+			if counter_to_moveto is counter_to_move - 2 or counter_to_movetoy is counter_to_movey - 2  :
+				print"Not a valid move---"
+				continue
+		if counter_to_moveto == counter_to_move - 1 and counter_to_movetoy == counter_to_movey:
+			print "Not a valid move----"
+			continue
+		print board[counter_to_moveto][counter_to_movetoy]
+		if board[counter_to_moveto][counter_to_movetoy] == FriendlyCounter() or board[counter_to_moveto][counter_to_movetoy] == Enemy:
+			print"There is already a counter in this position"
+			continue
+		#elif counter_to_moveto is not counter_to_move - 1 or counter_to_movetoy is  counter_to_movey  :
+		#	print"Not a valid move"
+		if board[counter_to_moveto][counter_to_movetoy] == "      " or board[counter_to_moveto][counter_to_movetoy] == "   1   " or board[counter_to_moveto][counter_to_movetoy] == "     2    " or board[counter_to_moveto][counter_to_movetoy] == "    3    " or board[counter_to_moveto][counter_to_movetoy] == "    4    " or board[counter_to_moveto][counter_to_movetoy] == "   5   " or board[counter_to_moveto][counter_to_movetoy] == "      6   " or board[counter_to_moveto][counter_to_movetoy] == "    7    " or board[counter_to_moveto][counter_to_movetoy] == "    8    ":
+			print"Not a valid move-----" 
+			continue
+		if counter_to_move != counter_to_moveto +1: 
+			print"Not a valid move------" 
+			continue
+		else:
+			valid_move = 1;
+			board[counter_to_move][counter_to_movey] = EmptySpace()
+			board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
+			#counterstaken = counterstaken + 1
+	reversedisplacement = (displacement[0], displacement[1])
+	if counter_to_moveto == 1:
+		board[counter_to_moveto][counter_to_movetoy] = FriendlyKing()
+
+	print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      	for row in board]))
+	print "counters taken =: " ,counterstaken
+
+	while True:
+		undo = raw_input("Undo? Y/N: ")
+		if undo in ['y', 'Y']:
+			undo_no = "no"
+			if displacement == (2, -2):
+				board[counter_to_move][counter_to_movey] = FriendlyCounter()
+				board[counter_to_moveto][counter_to_movetoy] = EmptySpace()
+				board[counter_to_moveto+1][counter_to_movetoy-1] = EnemyCounter()
 				counterstaken = counterstaken - 1 
 				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       				for row in board]))
@@ -431,15 +631,15 @@ def player2turnlogic(board, counterstaken):
 				break
 			elif displacement == (2, 2):
 				board[counter_to_moveto][counter_to_movetoy] = EmptySpace()
-			    	board[counter_to_move][counter_to_movey] = EnemyCounter()
-			    	board[counter_to_moveto + 1][counter_to_movetoy +1 ] = FriendlyCounter()
+			    	board[counter_to_move][counter_to_movey] = FriendlyCounter()
+			    	board[counter_to_moveto + 1][counter_to_movetoy +1 ] = EnemyCounter()
 				counterstaken = counterstaken - 1
 				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       				for row in board]))
 				print "counters taken =: " ,counterstaken
 				break
 			else:
-				board[counter_to_move][counter_to_movey] = EnemyCounter()
+				board[counter_to_move][counter_to_movey] = FriendlyCounter()
 				board[counter_to_moveto][counter_to_movetoy] = "|       |"
 				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       				for row in board]))
@@ -458,7 +658,7 @@ def player2turnlogic(board, counterstaken):
 			redo_up = redo.upper()
 			if redo_up in ['y', 'Y']:
 				if displacement == (2, -2):
-					board[counter_to_moveto][counter_to_movetoy] = EnemyCounter()
+					board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
 				    	board[counter_to_move][counter_to_movey] = EmptySpace()
 				    	board[counter_to_moveto + 1][counter_to_movetoy -1] = EmptySpace()
 					counterstaken = counterstaken + 1
@@ -468,7 +668,7 @@ def player2turnlogic(board, counterstaken):
 					print "counters taken =: " ,counterstaken
 					break
 				elif displacement == (2, 2):
-					board[counter_to_moveto][counter_to_movetoy] = EnemyCounter()
+					board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
 				    	board[counter_to_move][counter_to_movey] = EmptySpace()
 				    	board[counter_to_moveto + 1][counter_to_movetoy +1] = EmptySpace()
 					counterstaken = counterstaken + 1
@@ -478,7 +678,7 @@ def player2turnlogic(board, counterstaken):
 					break
 				else:
 					board[counter_to_move][counter_to_movey] = EmptySpace()
-					board[counter_to_moveto][counter_to_movetoy] = EnemyCounter()
+					board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
 					print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
 	      				for row in board]))
 					print "counters taken =: " ,counterstaken
@@ -490,14 +690,14 @@ def player2turnlogic(board, counterstaken):
 				print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
 	     			for row in board]))
 				print "counters taken =: " ,counterstaken
-				break	
-	#if counter_to_moveto == 1:
+				break
+
 def kinglogic(counter_to_move, counter_to_movey, counter_to_moveto, counter_to_movetoy):
 	board[counter_to_move][counter_to_movey] = EmptySpace()
 	board[counter_to_moveto][counter_to_movetoy] = BLUE + "|King   |" + END
 	print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
 	     			for row in board]))
-def AIturnlogic(board):
+def AIturnlogic(board, aicounterstaken):
 	#board.index(EmptySpace())
 	indices = [i for i, x in enumerate(board) if x == "    4    "]
 	#print board[1][4]
@@ -539,6 +739,8 @@ print("Algorithms & Data Structures Coursework")
 print("Enter co-ordinates of counter in the form (vertical,horizontal)")
 undo_no = ""
 counterstaken = 0
+player2counterstaken = 0
+aicounterstaken = 0
 while True:
 	
 	begin = raw_input("Press 1 to play with against the computer, 2 to play against another person, T for tutorial, N to quit: ")
@@ -551,19 +753,18 @@ while True:
 		tutorial()
 		continue
 	elif begin == '1':
-
+		print"Human"
 		
 		print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       	for row in board]))
 		print "counters taken =: " ,counterstaken
 		while counterstaken == 0:
-			print "a"
 			userturnlogic(counterstaken, board)
-			AIturnlogic(board)
+			player2turnlogic(board, player2counterstaken)
 			print counterstaken
 		youwin()
 	elif begin == '2':
-
+		print "AI"
 		
 		print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       	for row in board]))
@@ -572,6 +773,6 @@ while True:
 
 	while counterstaken == 0:
 		userturnlogic(counterstaken, board)
-		player2turnlogic(board, counterstaken)
+		AIturnlogic(board, aicounterstaken)
 		print counterstaken
 	youwin()
