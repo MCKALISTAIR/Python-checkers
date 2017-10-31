@@ -53,9 +53,9 @@ def checkerboard(n):
         board.append([])
         for j in range(n):
             board[i].append((i+j) % 2)
-    return board
-for board in checkerboard(8):
-    print(board)
+    #return board
+#for board in checkerboard(8):
+    #print(board)
 
 #[Square("empty"), Square('blue'), Square('blueKing')]
 
@@ -72,13 +72,9 @@ board =[["      ","   1   ", "     2    ","    3    ","    4    ","   5   ", "  
 
 a = [(ix,iy,type(i)) for ix, row in enumerate(board) for iy, i in enumerate(row) if type(i) == type(Enemy)]
 print(type(Enemy))
-print a
-b = a[:1]
 c = str(a[1])
-print c
-
-print 'hccccc'
-
+x = int(c[-38])
+y = int(c[-35])
 def tutorial():
     tutorialboard = [["      ","   1   ", "     2    ","    3    "],
                     ["   1 ", EmptySpace(), EmptySpace(),EmptySpace(),],
@@ -229,13 +225,27 @@ def userturnlogic(counterstaken, board):
     print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
           for row in board]))
     print "counters taken =: " ,counterstaken
-    #startposx = counter_to_move
-    #startposy = counter_to_movey
-    #endposx = counter_to_moveto 
-    #edposy = counter_to_movetoy 
-    #startpos = (startposx, startposy)
-    #endpos = (endposx, endposy)
+    startposx = counter_to_move
+    startposy = counter_to_movey
+    endposx = counter_to_moveto 
+    endposy = counter_to_movetoy 
+    startpos = (startposx, startposy)
+    endpos = (endposx, endposy)
+    stuff = (startpos, endpos)
     #movelist.append(startpos, endpos)
+    movelist.append(stuff)
+    reversedlist = list(reversed(movelist))
+    print reversedlist
+    for i in reversedlist:
+    	dave = i[0]
+    	davey = i[1]
+    	xt,yt = davey
+    	x,y = dave
+    print "h"
+    board[xt][yt] = EmptySpace()
+    board[x][y] = FriendlyCounter()
+    print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+          for row in board]))
     while True:
         undo = raw_input("Undo? Y/N: ")
         if undo in ['y', 'Y']:
