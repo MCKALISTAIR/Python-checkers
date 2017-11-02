@@ -27,11 +27,11 @@ class EmptySpace(object):
     def __str__(self):
         return "|       |"
 
-
-#class Moves(startpos, endpos):
-        #def __init__(self, startpos, endpos):
-            #self.startpos = startpos
-            #self.endpos = endpos
+class Moves:
+       
+    def __init__(self, startpos, endpos):
+        self.startpos = startpos
+        self.endpos = endpos
 
         #def doMove(self, board):
         #	return board;
@@ -235,17 +235,27 @@ def userturnlogic(counterstaken, board):
     #movelist.append(startpos, endpos)
     movelist.append(stuff)
     reversedlist = list(reversed(movelist))
-    print reversedlist
-    for i in reversedlist:
-    	dave = i[0]
-    	davey = i[1]
-    	xt,yt = davey
-    	x,y = dave
-    print "h"
-    board[xt][yt] = EmptySpace()
-    board[x][y] = FriendlyCounter()
-    print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-          for row in board]))
+    #mademove = movelist.pop[0]
+    #print mademove
+    undoa = raw_input("Undo? Y/N: ")
+    if undoa in ['y', 'Y']:
+        for i in reversedlist:
+            	#dave = i[0]
+            	#davey = i[1]
+            xt,yt = endpos
+            x,y = startpos
+            board[xt][yt] = EmptySpace()
+            board[x][y] = FriendlyCounter()
+            print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                    for row in board]))
+    #playersmove = Moves(startpos, endpos)
+    #movelist.append(playersmove)
+    print movelist
+    #board[xt][yt] = EmptySpace()
+    #board[x][y] = FriendlyCounter()
+    #print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+          #for row in board]))
+    
     while True:
         undo = raw_input("Undo? Y/N: ")
         if undo in ['y', 'Y']:
