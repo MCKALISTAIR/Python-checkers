@@ -3,7 +3,7 @@ RED = '\033[91m'
 END = '\033[0m'
 counterstaken = 0
 import copy
-
+import time
 class FriendlyCounter(object):
     def __repr__(self):
         return FriendlyCounter()
@@ -44,8 +44,11 @@ class Moves:
 #add to a list each move
 #board[counter_to_move][counter_to_movey] = startposition
 #board[counter_to_moveto][counter_to_movetoy] = endposition
-
+replaylist = []
 movelist = []
+redolist = []
+player2movelist = []
+player2redolist = []
 Enemy = EnemyCounter()
 def checkerboard(n):
     board = []
@@ -72,6 +75,8 @@ board =[["      ","   1   ", "     2    ","    3    ","    4    ","   5   ", "  
 
 a = [(ix,iy,type(i)) for ix, row in enumerate(board) for iy, i in enumerate(row) if type(i) == type(Enemy)]
 print(type(Enemy))
+print "if you see this more than once, shits broken"
+replayboard = copy.deepcopy(board)
 c = str(a[1])
 x = int(c[-38])
 y = int(c[-35])
@@ -179,7 +184,7 @@ def userturnlogic(counterstaken, board):
                     print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
                       for row in board]))
                     print "counters taken =: " ,counterstaken
-                    secondturn(board, counter_to_move, counter_to_moveto, counter_to_movey, counter_to_movetoy, counterstaken)
+                    #secondturn(board, counter_to_move, counter_to_moveto, counter_to_movey, counter_to_movetoy, counterstaken)
                 elif board[counter_to_moveto+1][counter_to_movetoy-1] != EnemyCounter():
                     print "Not a valid move-"
                     print board[counter_to_moveto+1][counter_to_movetoy-1]
@@ -194,7 +199,7 @@ def userturnlogic(counterstaken, board):
                 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
                   for row in board]))
                 print "counters taken =: " ,counterstaken
-                secondturn(board, counter_to_move, counter_to_moveto, counter_to_movey, counter_to_movetoy, counterstaken)
+                #secondturn(board, counter_to_move, counter_to_moveto, counter_to_movey, counter_to_movetoy, counterstaken)
             elif board[counter_to_moveto+1][counter_to_movetoy+1] != EnemyCounter():
                 print "Not a valid move--"
                 continue
@@ -231,107 +236,71 @@ def userturnlogic(counterstaken, board):
     endposy = counter_to_movetoy 
     startpos = (startposx, startposy)
     endpos = (endposx, endposy)
-    stuff = (startpos, endpos)
-    #movelist.append(startpos, endpos)
-    movelist.append(stuff)
-    reversedlist = list(reversed(movelist))
-    #mademove = movelist.pop[0]
-    #print mademove
-    undoa = raw_input("Undo? Y/N: ")
-    if undoa in ['y', 'Y']:
-        for i in reversedlist:
-            	#dave = i[0]
-            	#davey = i[1]
-            xt,yt = endpos
-            x,y = startpos
-            board[xt][yt] = EmptySpace()
-            board[x][y] = FriendlyCounter()
-            print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                    for row in board]))
-    #playersmove = Moves(startpos, endpos)
-    #movelist.append(playersmove)
+    move = (startpos, endpos)
+    movelist.insert(0,move)
+    replaylist.append(move)
     print movelist
-    #board[xt][yt] = EmptySpace()
-    #board[x][y] = FriendlyCounter()
-    #print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-          #for row in board]))
-    
+    print replaylist
     while True:
-        undo = raw_input("Undo? Y/N: ")
-        if undo in ['y', 'Y']:
-            undo_no = "no"
-            if displacement == (2, -2):
-                board[counter_to_move][counter_to_movey] = FriendlyCounter()
-                board[counter_to_moveto][counter_to_movetoy] = EmptySpace()
-                board[counter_to_moveto+1][counter_to_movetoy-1] = EnemyCounter()
-                counterstaken = counterstaken - 1 
-                print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                      for row in board]))
-                print "counters taken =: " ,counterstaken
-                break
-            elif displacement == (2, 2):
-                board[counter_to_moveto][counter_to_movetoy] = EmptySpace()
-                board[counter_to_move][counter_to_movey] = FriendlyCounter()
-                board[counter_to_moveto + 1][counter_to_movetoy +1 ] = EnemyCounter()
-                counterstaken = counterstaken - 1
-                print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                      for row in board]))
-                print "counters taken =: " ,counterstaken
-                break
+        if movelist:
+            undoa = raw_input("Undo move? Y/N: ")
+            if undoa in ['y', 'Y']:
+                    for i in movelist:
+                        print i
+                        endpos1 = i[0]
+                        startpos1 = i[1]
+                        xt,yt = endpos1
+                        x,y = startpos1
+                        a = startpos1 
+                        b = endpos1
+                        displacement = (startpos1[0] - endpos1[0], startpos1[1] - endpos1[1])
+                        if displacement == (2,-2):
+                            board[x-1][y+1] = EnemyCounter()
+                        elif displacement == (2,2):
+                            board[x-1][y-1] = EnemyCounter()
+                        board[xt][yt] = FriendlyCounter()
+                        board[x][y] = EmptySpace()
+                        print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                                for row in board]))
+                        redolist.append(i)
+                        movelist.remove(i)
+                        print movelist
+                        print "f"
+                        print redolist
+                        continue
+            elif undoa == "l":
+                    replay(replayboard, replaylist)
             else:
-                board[counter_to_move][counter_to_movey] = FriendlyCounter()
-                board[counter_to_moveto][counter_to_movetoy] = "|       |"
-                print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                      for row in board]))
-                print "counters taken =: " ,counterstaken
                 break
-        elif undo not  in ['y', 'Y', 'n', 'N']:
-            print "Please enter Y or N only"
-            continue
+            if redolist:
+                redomove = raw_input("Redo Y/N: ")
+                if redomove in ['y', 'Y']:
+                    for i in redolist:
+                        print i
+                        startpos1 = i[0]
+                        endpos1 = i[1]
+                        xt,yt = startpos1
+                        x,y = endpos1
+                        a = endpos1 
+                        b = startpos1
+                        displacement = (startpos1[0] - endpos1[0], startpos1[1] - endpos1[1])
+                        if displacement == (2,-2):
+                            board[x-1][y+1] = EnemyCounter()
+                        elif displacement == (2,2):
+                            board[x-1][y-1] = EnemyCounter()
+                        board[xt][yt] = EmptySpace()
+                        board[x][y] = FriendlyCounter()
+                        print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                                for row in board]))
+                        redolist.remove(i)
+                        print "f"
+                        print redolist
+                        continue
+            else:
+                break
         else:
-            undo_no = "yes"
             break
-    print displacement
-    if undo_no is not "yes":
-        while True:        
-            redo = raw_input("Re-do? Y/N: ")
-            redo_up = redo.upper()
-            if redo_up in ['y', 'Y']:
-                if displacement == (2, -2):
-                    board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
-                    board[counter_to_move][counter_to_movey] = EmptySpace()
-                    board[counter_to_moveto + 1][counter_to_movetoy -1] = EmptySpace()
-                    counterstaken = counterstaken + 1
-                    print "jgf"
-                    print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                          for row in board]))
-                    print "counters taken =: " ,counterstaken
-                    break
-                elif displacement == (2, 2):
-                    board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
-                    board[counter_to_move][counter_to_movey] = EmptySpace()
-                    board[counter_to_moveto + 1][counter_to_movetoy +1] = EmptySpace()
-                    counterstaken = counterstaken + 1
-                    print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                          for row in board]))
-                    print "counters taken =: " ,counterstaken
-                    break
-                else:
-                    board[counter_to_move][counter_to_movey] = EmptySpace()
-                    board[counter_to_moveto][counter_to_movetoy] = FriendlyCounter()
-                    print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                          for row in board]))
-                    print "counters taken =: " ,counterstaken
-                    break
-            elif redo_up not  in ['y', 'Y', 'n', 'N']:
-                print "Please enter Y or N only"
-                continue
-            else:
-                print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                     for row in board]))
-                print "counters taken =: " ,counterstaken
-                break
-
+    print movelist
 def player2turnlogic(board, player2counterstaken):
     print RED + "Player 2's turn " + END
     valid = 0
@@ -463,81 +432,68 @@ def player2turnlogic(board, player2counterstaken):
           for row in board]))
     print RED + "counters taken =: " + END , player2counterstaken
 
+    startposx = counter_to_move
+    startposy = counter_to_movey
+    endposx = counter_to_moveto 
+    endposy = counter_to_movetoy 
+    startpos = (startposx, startposy)
+    endpos = (endposx, endposy)
+    move = (startpos, endpos)
+    movelist.insert(0,move)
+    print movelist
     while True:
-        undo = raw_input("Undo? Y/N: ")
-        if undo in ['y', 'Y']:
-            undo_no = "no"
-            if displacement == (-2, 2):
-                board[counter_to_move][counter_to_movey] = EnemyCounter()
-                board[counter_to_moveto][counter_to_movetoy] = EmptySpace()
-                board[counter_to_moveto+1][counter_to_movetoy-1] = FriendlyCounter()
-                player2counterstaken = player2counterstaken - 1 
-                print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                      for row in board]))
-                print RED + "counters taken =: " + END ,player2counterstaken
-                break
-            elif displacement == (-2, -2):
-                board[counter_to_moveto][counter_to_movetoy] = EmptySpace()
-                board[counter_to_move][counter_to_movey] = EnemyCounter()
-                board[counter_to_moveto + 1][counter_to_movetoy +1 ] = FriendlyCounter()
-                player2counterstaken = player2counterstaken - 1
-                print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                      for row in board]))
-                print RED + "counters taken =: " + END ,player2counterstaken
-                break
+        if player2movelist:
+            undoa = raw_input("Undo move? Y/N: ")
+            if undoa in ['y', 'Y']:
+                    for i in player2movelist:
+                        print i
+                        endpos1 = i[0]
+                        startpos1 = i[1]
+                        xt,yt = endpos1
+                        x,y = startpos1
+                        a = startpos1 
+                        b = endpos1
+                        displacement = (startpos1[0] - endpos1[0], startpos1[1] - endpos1[1])
+                        if displacement == (2,-2):
+                            board[x-1][y+1] = EnemyCounter()
+                        elif displacement == (2,2):
+                            board[x-1][y-1] = EnemyCounter()
+                        board[xt][yt] = FriendlyCounter()
+                        board[x][y] = EmptySpace()
+                        print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                                for row in board]))
+                        player2redolist.append(i)
+                        player2movelist.remove(i)
+                        continue
             else:
-                board[counter_to_move][counter_to_movey] = EnemyCounter()
-                board[counter_to_moveto][counter_to_movetoy] = "|       |"
-                print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                      for row in board]))
-                print RED + "counters taken =: " + END ,player2counterstaken
                 break
-        elif undo not  in ['y', 'Y', 'n', 'N']:
-            print "Please enter Y or N only"
-            continue
+            if player2redolist:
+                redomove = raw_input("Redo Y/N: ")
+                if redomove in ['y', 'Y']:
+                    for i in player2redolist:
+                        print i
+                        startpos1 = i[0]
+                        endpos1 = i[1]
+                        xt,yt = startpos1
+                        x,y = endpos1
+                        a = endpos1 
+                        b = startpos1
+                        displacement = (startpos1[0] - endpos1[0], startpos1[1] - endpos1[1])
+                        if displacement == (2,-2):
+                            board[x-1][y+1] = EnemyCounter()
+                        elif displacement == (2,2):
+                            board[x-1][y-1] = EnemyCounter()
+                        board[xt][yt] = EmptySpace()
+                        board[x][y] = FriendlyCounter()
+                        print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                                for row in board]))
+                        player2redolist.remove(i)
+                        continue
+            else:
+                break
         else:
-            undo_no = "yes"
             break
-    print displacement
-    if undo_no is not "yes":
-        while True:        
-            redo = raw_input("Re-do? Y/N: ")
-            redo_up = redo.upper()
-            if redo_up in ['y', 'Y']:
-                if displacement == (-2, 2):
-                    board[counter_to_moveto][counter_to_movetoy] = EnemyCounter()
-                    board[counter_to_move][counter_to_movey] = EmptySpace()
-                    board[counter_to_moveto + 1][counter_to_movetoy -1] = EmptySpace()
-                    player2counterstaken = player2counterstaken + 1
-                    print "jgf"
-                    print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                          for row in board]))
-                    print RED + "counters taken =: " + END ,player2counterstaken
-                    break
-                elif displacement == (-2, -2):
-                    board[counter_to_moveto][counter_to_movetoy] = EnemyCounter()
-                    board[counter_to_move][counter_to_movey] = EmptySpace()
-                    board[counter_to_moveto + 1][counter_to_movetoy +1] = EmptySpace()
-                    player2counterstaken = player2counterstaken + 1
-                    print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                          for row in board]))
-                    print RED + "counters taken =: " + END ,player2counterstaken
-                    break
-                else:
-                    board[counter_to_move][counter_to_movey] = EmptySpace()
-                    board[counter_to_moveto][counter_to_movetoy] = EnemyCounter()
-                    print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                          for row in board]))
-                    print RED + "counters taken =: " + END ,player2counterstaken
-                    break
-            elif redo_up not  in ['y', 'Y', 'n', 'N']:
-                print "Please enter Y or N only"
-                continue
-            else:
-                print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                     for row in board]))
-                print RED + "counters taken =: " + END ,player2counterstaken
-                break    
+    
 def secondturn(board, counter_to_move, counter_to_moveto, counter_to_movey, counter_to_movetoy, counterstaken):
     print "second turn"
     print counter_to_moveto
@@ -743,6 +699,31 @@ def AIturnlogic(board, aicounterstaken):
                     #print data
         #for rowNo in enumerate(board):
             #print(rowNo)
+def replay(replayboard, replaylist):
+    print replaylist
+    replay = raw_input("Press P to begin the replay: ")
+    if replay in ['p', 'P']:
+        print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+            for row in replayboard]))
+        for i in replaylist:
+                        startpos1 = i[0]
+                        endpos1 = i[1]
+                        xt,yt = startpos1
+                        x,y = endpos1
+                        a = endpos1 
+                        b = startpos1
+                        displacement = (startpos1[0] - endpos1[0], startpos1[1] - endpos1[1])
+                        if displacement == (2,-2):
+                            replayboard[x-1][y+1] = EnemyCounter()
+                        elif displacement == (2,2):
+                            replayboard[x-1][y-1] = EnemyCounter()
+                        replayboard[xt][yt] = EmptySpace()
+                        replayboard[x][y] = FriendlyCounter()
+                        print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                                for row in replayboard]))
+                        replaylist.remove(i)
+                        time.sleep(5)
+                        continue
 def youwin():
     text = [["|  | |  ||       ||  | |  |  | | _ | ||   | |  |  | ||  |"], 
             ["|  |_|  ||   _   ||  | |  |  | || || ||   | |   |_| ||  |"], 
