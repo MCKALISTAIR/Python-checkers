@@ -45,8 +45,8 @@ class Moves:
 replaylist = []
 movelist = []
 redolist = []
-friendlycounterlist = [1]
-enemycounterlist = [1]
+friendlycounterlist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+enemycounterlist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 stalematelist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 player2movelist = []
 player2redolist = []
@@ -59,9 +59,9 @@ board =[["      ","   1   ", "     2    ","    3    ","    4    ","   5   ", "  
              ["   3 " , FriendlyCounter(), FriendlyCounter(),EmptySpace(), EnemyCounter(), EmptySpace(), FriendlyCounter(),EnemyCounter(), EnemyCounter()],
              ["   4 " , EmptySpace(),EmptySpace(),FriendlyCounter(), EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(), FriendlyCounter()],
              ["   5 " , FriendlyCounter(),EmptySpace(), EmptySpace(), EnemyCounter(),EmptySpace(),EnemyKing(), EmptySpace(), EmptySpace()],
-             ["   6 " , FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace(), EmptySpace(), EmptySpace(),FriendlyCounter(), EmptySpace()],
-             ["   7 " , EmptySpace(), FriendlyCounter(),EmptySpace(), EmptySpace(), EnemyKing(), FriendlyCounter(),EmptySpace(), EmptySpace()], 
-             ["   8 ", FriendlyCounter(), EmptySpace(),FriendlyCounter(), FriendlyKing(), EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace()]]
+             ["   6 " , FriendlyCounter(), EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace(), EnemyCounter(),EmptySpace(), EmptySpace()],
+             ["   7 " , EmptySpace(), FriendlyCounter(),EmptySpace(), EnemyCounter(), EnemyCounter(), FriendlyKing(),FriendlyCounter(), EmptySpace()], 
+             ["   8 ", FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace(), EnemyKing(), EmptySpace(),EmptySpace(), EmptySpace()]]
 
 a = [(ix,iy,type(i)) for ix, row in enumerate(board) for iy, i in enumerate(row) if type(i) == type(Enemy)]
 print "if you see this more than once, shits broken"
@@ -153,10 +153,14 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
             if type(board[counter_to_move][counter_to_movey]) == type(ecounter) or type(board[counter_to_move][counter_to_movey]) == type(eking):
                 print"That is an enemy counter"
                 continue
+            if type(board[counter_to_move][counter_to_movey]) == type(EmptySpace()):
+                print"There is no counter in this position "
+                continue
             if type(board[counter_to_move][counter_to_movey]) is not type(EmptySpace()):
                 if counter_to_movey is not 8:
                     if counter_to_movey is not 7:
-                        if type(board[counter_to_move-1][counter_to_movey+1]) == type(ecounter) or type(board[counter_to_moveto-1][counter_to_movetoy+1]) == type(eking):
+                        print "tytytyty"
+                        if type(board[counter_to_move-1][counter_to_movey+1]) == type(ecounter) or type(board[counter_to_move-1][counter_to_movey+1]) == type(eking):
                             if type(board[counter_to_move-2][counter_to_movey+2]) == type(EmptySpace()):
                                 print "Force-jump opertunity detected, excecuting1"
                                 fjump = 1
@@ -167,7 +171,10 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                                 time.sleep(3)
                                 board[counter_to_move][counter_to_movey] = EmptySpace()
                                 board[counter_to_move-1][counter_to_movey+1] = EmptySpace()
-                                board[counter_to_move-2][counter_to_movey+2] = counter
+                                if type(board[counter_to_move][counter_to_movey]) == type(counter): 
+                                    board[counter_to_move-2][counter_to_movey+2] = counter
+                                elif type(board[counter_to_move][counter_to_movey]) == type(king):
+                                    board[counter_to_move-2][counter_to_movey+2] = king
                                 counter_to_move = counter_to_move-2
                                 counter_to_movey = counter_to_movey+2
                                 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
@@ -177,9 +184,10 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                                 stalematelist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
                                 checkwin(friendlycounterlist, enemycounterlist)
                                 break
-            if type(board[counter_to_move-1][counter_to_movey-1]) == type(ecounter) or type(board[counter_to_moveto-1][counter_to_movetoy-1]) == type(eking):
+            if type(board[counter_to_move-1][counter_to_movey-1]) == type(ecounter) or type(board[counter_to_move-1][counter_to_movey-1]) == type(eking):
                 if type(board[counter_to_move-2][counter_to_movey-2]) == type(EmptySpace()):
                     print "Force-jump opertunity detected, excecuting"
+                    fjump = 1
                     if type(board[counter_to_move][counter_to_movey]) == type(king):
                                 board[counter_to_move-2][counter_to_movey-2] = king
                     elif type(board[counter_to_move][counter_to_movey]) == type(counter):
@@ -187,7 +195,10 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                     time.sleep(3)
                     board[counter_to_move][counter_to_movey] = EmptySpace()
                     board[counter_to_move-1][counter_to_movey-1] = EmptySpace()
-                    board[counter_to_move-2][counter_to_movey-2] = counter
+                    if type(board[counter_to_move][counter_to_movey]) == type(counter): 
+                        board[counter_to_move-2][counter_to_movey+2] = counter
+                    elif type(board[counter_to_move][counter_to_movey]) == type(king):
+                        board[counter_to_move-2][counter_to_movey+2] = king
                     counter_to_move = counter_to_move-2
                     counter_to_movey = counter_to_movey-2
                     print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
@@ -196,58 +207,58 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                     stalematelist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
                     checkwin(friendlycounterlist, enemycounterlist)
                     break
-                if type(board[counter_to_move][counter_to_movey]) == type(ecounter):
-                        if type(board[counter_to_move+1][counter_to_movey+1]) == type(ecounter) or type(board[counter_to_moveto+1][counter_to_movetoy-1]) == type(eking):
-                            if type(board[counter_to_move+2][counter_to_movey+2]) == type(EmptySpace()):
-                                print "Force-jump opertunity detected, excecuting"
-                                time.sleep(3)
-                                if type(board[counter_to_move][counter_to_movey]) == type(king):
-                                    board[counter_to_move+2][counter_to_movey+2] = king
-                                elif type(board[counter_to_move][counter_to_movey]) == type(counter):
-                                    board[counter_to_move+2][counter_to_movey+2] = counter
-                                board[counter_to_move][counter_to_movey] = EmptySpace()
-                                board[counter_to_move+1][counter_to_movey+1] = EmptySpace()
-                                counter_to_move = counter_to_move+2
-                                counter_to_movey = counter_to_movey+2
-                                print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                                    for row in board]))
-                                counterlist.pop(0)
-                                stalematelist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-                                checkwin(friendlycounterlist, enemycounterlist)
-                                break
-                if type(board[counter_to_move][counter_to_movey]) == type(ecounter):
-                    if type(board[counter_to_move+1][counter_to_movey-1]) == type(ecounter) or type(board[counter_to_moveto+1][counter_to_movetoy-1]) == type(eking):
-                        if type(board[counter_to_move+2][counter_to_movey-2]) == type(EmptySpace()):
-                            print "Force-jump opertunity detected, excecuting"
-                            if type(board[counter_to_move][counter_to_movey]) == type(king):
-                                        board[counter_to_move+2][counter_to_movey-2] = king
-                            elif type(board[counter_to_move][counter_to_movey]) == type(counter):
-                                        board[counter_to_move+2][counter_to_movey-2] = counter
-                            time.sleep(3)
-                            board[counter_to_move][counter_to_movey] = EmptySpace()
-                            board[counter_to_move+1][counter_to_movey-1] = EmptySpace()
-                            board[counter_to_move+2][counter_to_movey-2] = counter
-                            counter_to_move = counter_to_move+2
-                            counter_to_movey = counter_to_movey-2
-                            print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                                for row in board]))
-                            counterlist.pop(0)
-                            stalematelist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-                            checkwin(friendlycounterlist, enemycounterlist)
-                            break
+            print "kkkkkaaaaa"
+            if type(board[counter_to_move+1][counter_to_movey+1]) == type(ecounter) or type(board[counter_to_move+1][counter_to_movey+1]) == type(eking):
+                if type(board[counter_to_move+2][counter_to_movey+2]) == type(EmptySpace()):
+                    print "Force-jump opertunity detected, excecuting"
+                    fjump = 1
+                    time.sleep(3)
+                    if type(board[counter_to_move][counter_to_movey]) == type(king):
+                        board[counter_to_move+2][counter_to_movey+2] = king
+                    elif type(board[counter_to_move][counter_to_movey]) == type(counter):
+                        board[counter_to_move+2][counter_to_movey+2] = counter
+                    board[counter_to_move][counter_to_movey] = EmptySpace()
+                    board[counter_to_move+1][counter_to_movey+1] = EmptySpace()
+                    counter_to_move = counter_to_move+2
+                    counter_to_movey = counter_to_movey+2
+                    print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                        for row in board]))
+                    counterlist.pop(0)
+                    stalematelist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+                    checkwin(friendlycounterlist, enemycounterlist)
+                    break
+            print "nnnngggg"
+            if counter_to_move is not 7:
+                print "f"
+                if type(board[counter_to_move+1][counter_to_movey-1]) == type(ecounter) or type(board[counter_to_move+1][counter_to_movey-1]) == type(eking):
+                    if type(board[counter_to_move+2][counter_to_movey-2]) == type(EmptySpace()):
+                        print "Force-jump opertunity detected, excecuting4"
+                        fjump = 1
+                        if type(board[counter_to_move][counter_to_movey]) == type(king):
+                                    board[counter_to_move+2][counter_to_movey-2] = king
+                        elif type(board[counter_to_move][counter_to_movey]) == type(counter):
+                                    board[counter_to_move+2][counter_to_movey-2] = counter
+                        time.sleep(3)
+                        board[counter_to_move][counter_to_movey] = EmptySpace()
+                        board[counter_to_move+1][counter_to_movey-1] = EmptySpace()
+                        counter_to_move = counter_to_move+2
+                        counter_to_movey = counter_to_movey-2
+                        print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                            for row in board]))
+                        counterlist.pop(0)
+                        stalematelist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+                        checkwin(friendlycounterlist, enemycounterlist)
+                        break
+        break
 
-            if type(board[counter_to_move][counter_to_movey]) == type(EmptySpace()):
-                print"There is no counter in this position "
-                continue
-            else:
-                break
-        elif secondturn == "1":
+        if secondturn == "1":
             print "second turn"
             print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
                     for row in board]))
             counter_to_move = counter_to_moveto
             counter_to_movey = counter_to_movetoy
             break
+    print "kkddd"
     valid_move = 0
     if fjump == 0:
         while valid_move == 0:
@@ -554,6 +565,7 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                     print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
                               for row in board]))
                     break
+            print "ldldldl"
             if player == "2":
                 if counter_to_moveto == 8:
                     board[counter_to_moveto][counter_to_movetoy] = king
@@ -570,6 +582,7 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                 stalematelist.pop(0)
                 checkstalemate(stalematelist)
                 valid_move = 1
+            print "hhhhhhh"
             if type(board[counter_to_move][counter_to_movey]) == type(counter):
                 print "1112"
                 board[counter_to_move][counter_to_movey] = EmptySpace()
@@ -707,8 +720,8 @@ def youwin():
             ["|  |_|  ||   _   ||  | |  |  | || || ||   | |   |_| ||  |"], 
             ["|       ||  | |  ||  |_|  |  |       ||   | |       ||  |"], 
             ["|_     _||  |_|  ||       |  |       ||   | |  _    ||__| "],
-            ["  |   |  |       ||       |  |   _   ||   | | | |   | __  "],
-            ["  |___|  |_______||_______|  |__| |__||___| |_|  |__||__|"]]
+              ["|   |  |       ||       |  |   _   ||   | | | |   | __  "],
+              ["|___|  |_______||_______|  |__| |__||___| |_|  |__||__|"]]
 
     print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
         for row in text]))
@@ -724,6 +737,7 @@ def youlose():
       
     print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
         for row in youloset]))
+    replay(replayboard, replaylist)
     main()
 def Player1(player):
         player = "1"
