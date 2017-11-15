@@ -46,14 +46,14 @@ Enemy = EnemyCounter()
 secondturn = "0"
 #The main game board
 board =[["      ","   1   ", "     2    ","    3    ","    4    ","   5   ", "      6   ","    7    ","    8    "], 
-             ["   1 ", EmptySpace(), EnemyCounter(),EmptySpace(),EnemyCounter() , EmptySpace(), EnemyCounter(),EmptySpace(), EnemyCounter()], 
-             ["   2 " , EnemyCounter(), EmptySpace(),EnemyCounter(), EmptySpace(), EnemyCounter(), EmptySpace(),EnemyCounter(), EmptySpace()],
-             ["   3 " , EmptySpace(), EnemyCounter(),EmptySpace(), EnemyCounter(), EmptySpace(), EnemyCounter(),EmptySpace(), EnemyCounter()],
-             ["   4 " , EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
+             ["   1 ", EmptySpace(), EmptySpace(),EmptySpace(),EmptySpace() , EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace()], 
+             ["   2 " , FriendlyCounter(), EmptySpace(),EnemyCounter(), EmptySpace(), EnemyCounter(), EmptySpace(),EmptySpace(), EmptySpace()],
+             ["   3 " , EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace()],
+             ["   4 " , EmptySpace(),EnemyCounter(),EmptySpace(), EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
              ["   5 " , EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
-             ["   6 " , FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace()],
-             ["   7 " , EmptySpace(), FriendlyCounter(),EmptySpace(), FriendlyCounter(), EmptySpace(), FriendlyCounter(),EmptySpace(), FriendlyCounter()], 
-             ["   8 ", FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace(), FriendlyCounter(), EmptySpace(),FriendlyCounter(), EmptySpace()]]
+             ["   6 " , EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace()],
+             ["   7 " , EnemyCounter(), EmptySpace(),FriendlyKing(), EmptySpace(), FriendlyKing(), EmptySpace(),EmptySpace(), EmptySpace()], 
+             ["   8 ", EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace()]]
 replayboard = copy.deepcopy(board)
 turn = ""
 player = ""
@@ -199,30 +199,31 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                     break
             #Force jump logic to take a counter if it is possible bassed on the counter you selected
             if counter_to_movey is not 8:
-                if type(board[counter_to_move+1][counter_to_movey+1]) == type(ecounter) or type(board[counter_to_move+1][counter_to_movey+1]) == type(eking):
-                    if type(board[counter_to_move+2][counter_to_movey+2]) == type(EmptySpace()):
-                        print "Force-jump opertunity detected, excecuting"
-                        fjump = 1
-                        time.sleep(3)
-                        if type(board[counter_to_move][counter_to_movey]) == type(king):
-                            board[counter_to_move+2][counter_to_movey+2] = king
-                        elif type(board[counter_to_move][counter_to_movey]) == type(counter):
-                            board[counter_to_move+2][counter_to_movey+2] = counter
-                        board[counter_to_move][counter_to_movey] = EmptySpace()
-                        board[counter_to_move+1][counter_to_movey+1] = EmptySpace()
-                        counter_to_move = counter_to_move+2
-                        counter_to_movey = counter_to_movey+2
-                        print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                            for row in board]))
-                        counterlist.pop(0)
-                        stalematelist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-                        checkwin(friendlycounterlist, enemycounterlist)
-                        break
+                if type(board[counter_to_move][counter_to_movey]) is not type(FriendlyCounter()):
+                    if type(board[counter_to_move+1][counter_to_movey+1]) == type(ecounter) or type(board[counter_to_move+1][counter_to_movey+1]) == type(eking):
+                        if type(board[counter_to_move+2][counter_to_movey+2]) == type(EmptySpace()):
+                            print "Force-jump opertunity detected, excecutinga"
+                            fjump = 1
+                            time.sleep(3)
+                            if type(board[counter_to_move][counter_to_movey]) == type(king):
+                                board[counter_to_move+2][counter_to_movey+2] = king
+                            elif type(board[counter_to_move][counter_to_movey]) == type(counter):
+                                board[counter_to_move+2][counter_to_movey+2] = counter
+                            board[counter_to_move][counter_to_movey] = EmptySpace()
+                            board[counter_to_move+1][counter_to_movey+1] = EmptySpace()
+                            counter_to_move = counter_to_move+2
+                            counter_to_movey = counter_to_movey+2
+                            print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                                for row in board]))
+                            counterlist.pop(0)
+                            stalematelist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+                            checkwin(friendlycounterlist, enemycounterlist)
+                            break
             #Force jump logic to take a counter if it is possible bassed on the counter you selected
             if counter_to_move is not 7:
                 if type(board[counter_to_move+1][counter_to_movey-1]) == type(ecounter) or type(board[counter_to_move+1][counter_to_movey-1]) == type(eking):
                     if type(board[counter_to_move+2][counter_to_movey-2]) == type(EmptySpace()):
-                        print "Force-jump opertunity detected, excecuting4"
+                        print "Force-jump opertunity detected, excecuting"
                         fjump = 1
                         if type(board[counter_to_move][counter_to_movey]) == type(king):
                                     board[counter_to_move+2][counter_to_movey-2] = king
@@ -241,6 +242,7 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                         break
         break
         #This would be for the second turn function
+        
         if secondturn == "1":
             print "second turn"
             print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
@@ -248,6 +250,7 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
             counter_to_move = counter_to_moveto
             counter_to_movey = counter_to_movetoy
             break
+            
     valid_move = 0
     if fjump == 0:
         while valid_move == 0:
@@ -591,10 +594,12 @@ def undofuncion(stalematelist, replaylist, turn, board,counter_to_move,counter_t
         rlist = redolist
         counter = FriendlyCounter()
         counterlist = friendlycounterlist
+        king = FriendlyKing()
     else:
         mlist = player2movelist
         rlist = player2redolist
         counter = EnemyCounter()
+        king = EnemyKing()
         counterlist = enemycounterlist
     #Save the move last made move to a list
     startposx = counter_to_move
@@ -653,7 +658,11 @@ def undofuncion(stalematelist, replaylist, turn, board,counter_to_move,counter_t
                         elif displacement == (2,2):
                             board[x-1][y-1] = counter
                         board[xt][yt] = EmptySpace()
-                        board[x][y] = counter
+                        if x == 8 or x == 1:
+                            board[x][y] = king
+                        else:
+                            board[x][y] = counter
+
                         print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
                                 for row in board]))
                         counterlist.pop(0)
