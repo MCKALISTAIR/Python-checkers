@@ -37,9 +37,9 @@ class EmptySpace(object):
 replaylist = []
 movelist = []
 redolist = []
-friendlycounterlist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-enemycounterlist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-stalematelist = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+friendlycounterlist = [1,1,1]
+enemycounterlist = [1,1,1,1]
+stalematelist = [1,1,1,1,1,1,1,1]
 player2movelist = []
 player2redolist = []
 Enemy = EnemyCounter()
@@ -49,8 +49,8 @@ board =[["      ","   1   ", "     2    ","    3    ","    4    ","   5   ", "  
              ["   1 ", EmptySpace(), EmptySpace(),EmptySpace(),EmptySpace() , EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace()], 
              ["   2 " , FriendlyCounter(), EmptySpace(),EnemyCounter(), EmptySpace(), EnemyCounter(), EmptySpace(),EmptySpace(), EmptySpace()],
              ["   3 " , EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace()],
-             ["   4 " , EmptySpace(),EnemyCounter(),EmptySpace(), EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
-             ["   5 " , EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
+             ["   4 " , EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
+             ["   5 " , EnemyCounter(),EmptySpace(), EmptySpace(), EmptySpace(),EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace()],
              ["   6 " , EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace()],
              ["   7 " , EnemyCounter(), EmptySpace(),FriendlyKing(), EmptySpace(), FriendlyKing(), EmptySpace(),EmptySpace(), EmptySpace()], 
              ["   8 ", EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace(), EmptySpace(), EmptySpace(),EmptySpace(), EmptySpace()]]
@@ -75,7 +75,7 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
     if player == "1":
         counter = FriendlyCounter()
         ecounter = EnemyCounter()
-        counterlist = friendlycounterlist
+        counterlist = enemycounterlist
         print "Player 1's turn"
         turn = "Player 1"
         king = FriendlyKing()
@@ -85,7 +85,7 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
     elif player == "2":
         counter = EnemyCounter()
         ecounter = FriendlyCounter()
-        counterlist = enemycounterlist
+        counterlist = friendlycounterlist
         king = EnemyKing()
         eking = FriendlyKing()
         print "Player 2's turn"
@@ -116,7 +116,7 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                     happy = raw_input("Are you happy with your selection? Y/N?: ")
                     if happy in ["N", "n"]:
                         continue
-                    elif happy in ["y", "Y"]:
+                    elif happy not in ["n", "N"]:
                         counter_to_move = int(counter_to_move_input)
                         break
             while True:
@@ -136,7 +136,7 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                     happy = raw_input("Are you happy with your selection? Y/N?: ")
                     if happy in ["N", "n"]:
                         continue
-                    elif happy in ["y", "Y"]:
+                    elif happy not in ["n", "N"]:
                         counter_to_movey = int(counter_to_movey_input)
                         break
             #These two ensure you do not want to move an empty space and a enemy counter
@@ -165,8 +165,6 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                                     board[counter_to_move-2][counter_to_movey+2] = counter
                                 elif type(board[counter_to_move][counter_to_movey]) == type(king):
                                     board[counter_to_move-2][counter_to_movey+2] = king
-                                counter_to_move = counter_to_move-2
-                                counter_to_movey = counter_to_movey+2
                                 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
                                     for row in board]))
                                 counterlist.pop(0)
@@ -189,8 +187,6 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                         board[counter_to_move-2][counter_to_movey+2] = counter
                     elif type(board[counter_to_move][counter_to_movey]) == type(king):
                         board[counter_to_move-2][counter_to_movey+2] = king
-                    counter_to_move = counter_to_move-2
-                    counter_to_movey = counter_to_movey-2
                     print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
                         for row in board]))
                     counterlist.pop(0)
@@ -211,8 +207,6 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                                 board[counter_to_move+2][counter_to_movey+2] = counter
                             board[counter_to_move][counter_to_movey] = EmptySpace()
                             board[counter_to_move+1][counter_to_movey+1] = EmptySpace()
-                            counter_to_move = counter_to_move+2
-                            counter_to_movey = counter_to_movey+2
                             print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
                                 for row in board]))
                             counterlist.pop(0)
@@ -270,7 +264,7 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                     happy = raw_input("Are you happy with your selection? Y/N?: ")
                     if happy in ["N", "n"]:
                         continue
-                    elif happy in ["y", "Y"]:
+                    elif happy not in ["n", "N"]:
                         counter_to_moveto = int(counter_to_move_to_input)
                         break
             while True:
@@ -287,7 +281,7 @@ def userturnlogic(stalematelist, counter_to_moveto, counter_to_movetoy, secondtu
                     happy = raw_input("Are you happy with your selection? Y/N?: ")
                     if happy in ["N", "n"]:
                         continue
-                    elif happy in ["y", "Y"]:
+                    elif happy not in ["n", "N"]:
                         counter_to_movetoy = int(counter_to_move_toy_input)
                         break
             #Calculate displacement to be used for the counter taking logic
@@ -595,11 +589,13 @@ def undofuncion(stalematelist, replaylist, turn, board,counter_to_move,counter_t
         counter = FriendlyCounter()
         counterlist = friendlycounterlist
         king = FriendlyKing()
+        ecounter = EnemyCounter()
     else:
         mlist = player2movelist
         rlist = player2redolist
         counter = EnemyCounter()
         king = EnemyKing()
+        ecounter = FriendlyCounter()
         counterlist = enemycounterlist
     #Save the move last made move to a list
     startposx = counter_to_move
@@ -629,6 +625,21 @@ def undofuncion(stalematelist, replaylist, turn, board,counter_to_move,counter_t
                             board[x-1][y+1] = counter
                         elif displacement == (2,2):
                             board[x-1][y-1] = counter
+                        elif displacement == (-2,-2):
+                            board[x+1][y-1] = counter
+                        elif displacement == (-2,-2):
+                            board[x+1][y+1] = counter
+                        elif displacement == (0,1):
+                            board[x+1][y] = ecounter
+                            board[x+2][y+1] = EmptySpace()
+                            board[x][y-1] = king
+                            print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                                for row in board]))
+                            stalematelist.insert(0,1)
+                            counterlist.insert(0,1)
+                            rlist.append(i)
+                            mlist.remove(i)
+                            continue
                         board[xt][yt] = counter
                         board[x][y] = EmptySpace()
                         print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
@@ -645,7 +656,7 @@ def undofuncion(stalematelist, replaylist, turn, board,counter_to_move,counter_t
                 redomove = raw_input("Redo Y/N: ")
                 if redomove in ['y', 'Y']:
                     for i in rlist:
-                        print i
+                        print displacement
                         startpos1 = i[0]
                         endpos1 = i[1]
                         xt,yt = startpos1
@@ -653,10 +664,25 @@ def undofuncion(stalematelist, replaylist, turn, board,counter_to_move,counter_t
                         a = endpos1 
                         b = startpos1
                         displacement = (startpos1[0] - endpos1[0], startpos1[1] - endpos1[1])
+                        print displacement
                         if displacement == (2,-2):
                             board[x-1][y+1] = counter
                         elif displacement == (2,2):
                             board[x-1][y-1] = counter
+                        elif displacement == (-2,2):
+                            board[x-1][y-1] = counter
+                        elif displacement == (-2,-2):
+                            board[x-1][y-1] = counter
+                        elif displacement == (0,-1):
+                            board[x+1][y] = EmptySpace()
+                            board[x+2][y+1] = king
+                            board[x][y-1] = EmptySpace()
+                            print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                                for row in board]))
+                            counterlist.pop(0)
+                            stalematelist.pop(0)
+                            rlist.remove(i)
+                            continue
                         board[xt][yt] = EmptySpace()
                         if x == 8 or x == 1:
                             board[x][y] = king
@@ -707,8 +733,8 @@ def youwin():
             ["|  |_|  ||   _   ||  | |  |  | || || ||   | |   |_| ||  |"], 
             ["|       ||  | |  ||  |_|  |  |       ||   | |       ||  |"], 
             ["|_     _||  |_|  ||       |  |       ||   | |  _    ||__| "],
-              ["|   |  |       ||       |  |   _   ||   | | | |   | __  "],
-              ["|___|  |_______||_______|  |__| |__||___| |_|  |__||__|"]]
+            ["  |   |  |       ||       |  |   _   ||   | | | |   | __  "],
+            ["  |___|  |_______||_______|  |__| |__||___| |_|  |__||__|"]]
 
     print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
         for row in text]))
@@ -743,13 +769,14 @@ def Player2(player):
 
 def checkwin(friendlycounterlist, enemycounterlist):
     #If the counterlist is emoty, enemy wins
+    print "ddd", friendlycounterlist
     if not friendlycounterlist:
-        youwin()
+        youlose()
         replay(replayboard, replaylist)
     else:
         #if the enemycounterlist is empty, friendly wins
         if not enemycounterlist:
-            youlose()
+            youwin()
             replay(replayboard, replaylist)
 def draw(board):
     #print the draw ascii art the czll the replay function
